@@ -16,17 +16,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseRun"/>
+            android:src="@drawable/exerciserun"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseSoc"/>
+            android:src="@drawable/exercisesoc"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseYog"/>
+            android:src="@drawable/exercisebad"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,17 +36,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseGol"/>
+            android:src="@drawable/exercisegol"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseHan"/>
+            android:src="@drawable/exercisehan"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseRol"/>
+            android:src="@drawable/exerciserol"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,17 +56,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseYan"/>
+            android:src="@drawable/exerciseyan"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseTen"/>
+            android:src="@drawable/exerciseten"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseTak"/>
+            android:src="@drawable/exercisetak"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,20 +76,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseSno"/>
+            android:src="@drawable/exercisesno"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseSki"/>
+            android:src="@drawable/exerciseski"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
-            android:src="@drawable/exerciseBas"/>
+            android:src="@drawable/exercisebas"/>
     </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/exerciseBad"/>
 </LinearLayout>
