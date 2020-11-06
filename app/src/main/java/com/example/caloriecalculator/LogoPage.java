@@ -16,7 +16,7 @@ public class LogoPage extends AppCompatActivity {
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
         startActivity(intent);
         finish();
 
