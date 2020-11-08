@@ -13,16 +13,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/ivExerciseRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exerciserun"/>
         <ImageView
+            android:id="@+id/ivExerciseSoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exercisesoc"/>
         <ImageView
+            android:id="@+id/ivExerciseBad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
@@ -33,16 +36,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/ivExerciseGol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exercisegol"/>
         <ImageView
+            android:id="@+id/ivExerciseHan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exercisehan"/>
         <ImageView
+            android:id="@+id/ivExerciseRol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
@@ -53,16 +59,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/ivExerciseYan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exerciseyan"/>
         <ImageView
+            android:id="@+id/ivExerciseTen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exerciseten"/>
         <ImageView
+            android:id="@+id/ivExerciseTak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
@@ -73,16 +82,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/ivExerciseSno"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exercisesno"/>
         <ImageView
+            android:id="@+id/ivExerciseSki"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
             android:src="@drawable/exerciseski"/>
         <ImageView
+            android:id="@+id/ivExerciseBas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="33dp"
