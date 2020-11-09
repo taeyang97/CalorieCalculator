@@ -19,6 +19,5 @@ public class LogoPage extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
         startActivity(intent);
         finish();
-
     }
 }

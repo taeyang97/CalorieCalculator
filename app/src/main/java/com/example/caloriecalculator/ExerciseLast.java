@@ -1,5 +1,6 @@
 package com.example.caloriecalculator;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,6 +14,8 @@ public class ExerciseLast extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_last);
+        ActionBar ac = getSupportActionBar();
+        ac.hide();
         btnExerciseSel = (Button)findViewById(R.id.btnExercisesSel);
         btnExerciseCal = (Button)findViewById(R.id.btnExercisesCal);
 
