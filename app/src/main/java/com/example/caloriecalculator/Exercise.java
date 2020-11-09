@@ -22,7 +22,6 @@ public class Exercise extends AppCompatActivity {
             R.id.ivExerciseGol, R.id.ivExerciseHan, R.id.ivExerciseRol,
             R.id.ivExerciseYan, R.id.ivExerciseTen, R.id.ivExerciseTak,
             R.id.ivExerciseSno, R.id.ivExerciseSki, R.id.ivExerciseBas};
-    Point p;
     int x,y;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,6 @@ public class Exercise extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
         ActionBar ac = getSupportActionBar();
         ac.hide();
-        p =getScreenSize(this);
         x=0;
         y=0;
 
@@ -63,12 +61,5 @@ public class Exercise extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public Point getScreenSize(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return  size;
     }
 }

@@ -3,7 +3,9 @@ package com.example.caloriecalculator;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +19,6 @@ public class MaxCalorie extends AppCompatActivity {
     double average;
     int maxCalorie;
     TextView tvMaxCalorie;
-    String tvText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class MaxCalorie extends AppCompatActivity {
         Button btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
         tvMaxCalorie = (TextView)findViewById(R.id.tvMaxCalorie);
 
+
         etMaxCalorie2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -40,7 +42,7 @@ public class MaxCalorie extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 average = (Double.parseDouble(etMaxCalorie1.getText().toString())-100)*0.9;
                 maxCalorie = (int)(average * Integer.parseInt(etMaxCalorie2.getText().toString()));
-                tvMaxCalorie.setText("Max값은?"+maxCalorie);
+                tvMaxCalorie.setText("나의 Max 칼로리 = "+maxCalorie);
             }
 
             @Override
@@ -56,5 +58,23 @@ public class MaxCalorie extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Max",tvMaxCalorie.getText().toString());
+        editor.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        if((preferences != null) && (preferences.contains("Max"))){
+            tvMaxCalorie.setText(preferences.getString("Max",""));
+        }
     }
 }

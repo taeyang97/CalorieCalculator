@@ -1,6 +1,9 @@
 package com.example.caloriecalculator;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     AutoCompleteTextView tvMainAtuoText1, tvMainAtuoText2;
     Button btnMainConfirm, btnMainReset, btnMainExercise;
-    TextView tvMainText1, tvMainText2;
+    TextView tvMainText1, tvMainText2, tvMainCalorieReset;
     String AutoText1;
     int AutoText2;
     @Override
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         btnMainExercise = (Button)findViewById(R.id.btnMainExercise);
         tvMainText1 = (TextView)findViewById(R.id.tvMainText1);
         tvMainText2 = (TextView)findViewById(R.id.tvMainText2);
+        tvMainCalorieReset = (TextView)findViewById(R.id.tvMainCalorieReset);
 
         btnMainConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,5 +59,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        tvMainCalorieReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvMainCalorieReset.setTextColor(Color.parseColor("#ff0000"));
+                clearState();
+                finish();
+            }
+        });
+    }
+    protected void clearState(){
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }
