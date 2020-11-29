@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 tvMainCalorieReset.setTextColor(Color.parseColor("#ff0000"));
                 clearState();
-                finish();
+                Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
+                startActivity(intent);
             }
         });
     }

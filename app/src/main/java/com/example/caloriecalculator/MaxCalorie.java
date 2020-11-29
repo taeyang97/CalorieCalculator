@@ -8,31 +8,53 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MaxCalorie extends AppCompatActivity {
-    EditText etMaxCalorie1, etMaxCalorie2;
     double average;
     int maxCalorie;
     TextView tvMaxCalorie;
-
+    String[] select = {"", String.valueOf(25), String.valueOf(30), String.valueOf(35), String.valueOf(40)};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_max_calorie);
         ActionBar ac = getSupportActionBar();
         ac.hide();
-        etMaxCalorie1 = (EditText)findViewById(R.id.etMaxCalorie1);
-        etMaxCalorie2 = (EditText)findViewById(R.id.etMaxCalorie2);
+        EditText etMaxCalorie = (EditText)findViewById(R.id.etMaxCalorie);
+        Spinner spinMaxCalorie = (Spinner) findViewById(R.id.spinMaxCalorie);
         Button btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
         tvMaxCalorie = (TextView)findViewById(R.id.tvMaxCalorie);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,select);
+        spinMaxCalorie.setAdapter(adapter);
+        spinMaxCalorie.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!TextUtils.isEmpty(etMaxCalorie.getText().toString())){
+                    average = (Double.parseDouble(etMaxCalorie.getText().toString())-100)*0.9;
+                    maxCalorie = (int)(average * Integer.parseInt(select[position]));
+                }
+                if(!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
+                    tvMaxCalorie.setText("나의 Max 칼로리 = " + maxCalorie);
+                }
+            }
 
-        etMaxCalorie2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        /*etMaxCalorie2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -40,7 +62,7 @@ public class MaxCalorie extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                average = (Double.parseDouble(etMaxCalorie1.getText().toString())-100)*0.9;
+                average = (Double.parseDouble(etMaxCalorie.getText().toString())-100)*0.9;
                 maxCalorie = (int)(average * Integer.parseInt(etMaxCalorie2.getText().toString()));
                 tvMaxCalorie.setText("나의 Max 칼로리 = "+maxCalorie);
             }
@@ -49,7 +71,7 @@ public class MaxCalorie extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
             }
-        });
+        });*/
 
         btnMaxCalorie.setOnClickListener(new View.OnClickListener() {
             @Override

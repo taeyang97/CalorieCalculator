@@ -47,7 +47,7 @@
             android:textSize="24sp"
             android:textColor="#446280"/>
         <EditText
-            android:id="@+id/etMaxCalorie1"
+            android:id="@+id/etMaxCalorie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -68,8 +68,8 @@
             android:text="나의 활동지수 입력"
             android:textSize="24sp"
             android:textColor="#446280"/>
-        <EditText
-            android:id="@+id/etMaxCalorie2"
+        <Spinner
+            android:id="@+id/spinMaxCalorie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
