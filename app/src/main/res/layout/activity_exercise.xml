@@ -5,102 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:layout_margin="20dp"
+    android:gravity="center"
     tools:context=".Exercise">
-    <LinearLayout
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:padding="30dp">
-        <ImageView
-            android:id="@+id/ivExerciseRun"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exerciserun"/>
-        <ImageView
-            android:id="@+id/ivExerciseSoc"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exercisesoc"/>
-        <ImageView
-            android:id="@+id/ivExerciseBad"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exercisebad"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:padding="30dp">
-        <ImageView
-            android:id="@+id/ivExerciseGol"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exercisegol"/>
-        <ImageView
-            android:id="@+id/ivExerciseHan"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exercisehan"/>
-        <ImageView
-            android:id="@+id/ivExerciseRol"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exerciserol"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:padding="30dp">
-        <ImageView
-            android:id="@+id/ivExerciseYan"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exerciseyan"/>
-        <ImageView
-            android:id="@+id/ivExerciseTen"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exerciseten"/>
-        <ImageView
-            android:id="@+id/ivExerciseTak"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/exercisetak"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:padding="30dp">
-        <ImageView
-            android:id="@+id/ivExerciseSno"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-
-            android:src="@drawable/exercisesno"/>
-        <ImageView
-            android:id="@+id/ivExerciseSki"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-
-            android:src="@drawable/exerciseski"/>
-        <ImageView
-            android:id="@+id/ivExerciseBas"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-
-            android:src="@drawable/exercisebas"/>
-    </LinearLayout>
+        android:numColumns="3"/>
 </LinearLayout>
