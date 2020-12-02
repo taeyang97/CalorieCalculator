@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MaxCalorie extends AppCompatActivity {
     double average;
@@ -33,19 +34,23 @@ public class MaxCalorie extends AppCompatActivity {
         Spinner spinMaxCalorie = (Spinner) findViewById(R.id.spinMaxCalorie);
         Button btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
         tvMaxCalorie = (TextView)findViewById(R.id.tvMaxCalorie);
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,select);
         spinMaxCalorie.setAdapter(adapter);
+
         spinMaxCalorie.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!TextUtils.isEmpty(etMaxCalorie.getText().toString())){
-                    average = (Double.parseDouble(etMaxCalorie.getText().toString())-100)*0.9;
-                    maxCalorie = (int)(average * Integer.parseInt(select[position]));
-                }
-                if(!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
-                    tvMaxCalorie.setText("나의 Max 칼로리 = " + maxCalorie);
+                try {
+                    if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
+                        average = (Double.parseDouble(etMaxCalorie.getText().toString()) - 100) * 0.9;
+                        maxCalorie = (int) (average * Integer.parseInt(select[position]));
+                    }
+                    if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
+                        tvMaxCalorie.setText("나의 Max 칼로리 = " + maxCalorie);
+                    }
+                } catch (NumberFormatException e){
+                    Toast.makeText(getApplicationContext(),"값을 올바르게 입력해 주세요",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -96,6 +101,10 @@ public class MaxCalorie extends AppCompatActivity {
         super.onResume();
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         if((preferences != null) && (preferences.contains("Max"))){
+            if(tvMaxCalorie.getText().toString().equals("나의 max 칼로리 값")){
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+            }
             tvMaxCalorie.setText(preferences.getString("Max",""));
         }
     }
