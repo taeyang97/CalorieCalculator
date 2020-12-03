@@ -48,6 +48,7 @@ public class MaxCalorie extends AppCompatActivity {
                     }
                     if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
                         tvMaxCalorie.setText("나의 Max 칼로리 = " + maxCalorie);
+                        btnMaxCalorie.setEnabled(true);
                     }
                 } catch (NumberFormatException e){
                     Toast.makeText(getApplicationContext(),"값을 올바르게 입력해 주세요",Toast.LENGTH_SHORT).show();
@@ -82,6 +83,7 @@ public class MaxCalorie extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                intent.putExtra("MaxCalorie",maxCalorie);
                 startActivity(intent);
             }
         });
@@ -101,10 +103,6 @@ public class MaxCalorie extends AppCompatActivity {
         super.onResume();
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         if((preferences != null) && (preferences.contains("Max"))){
-            if(tvMaxCalorie.getText().toString().equals("나의 max 칼로리 값")){
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
-            }
             tvMaxCalorie.setText(preferences.getString("Max",""));
         }
     }
