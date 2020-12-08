@@ -53,6 +53,8 @@
             android:layout_weight="3"
             android:gravity="center"
             android:layout_marginHorizontal="20dp"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
             android:hint="입력하세요"/>
     </LinearLayout>
     <LinearLayout
@@ -91,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="나의 max 칼로리 값"
+        android:text="나의 Max 칼로리 값   "
         android:textSize="20sp"
         android:textColor="#446280"/>
 </LinearLayout>

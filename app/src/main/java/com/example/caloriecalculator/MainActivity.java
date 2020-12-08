@@ -21,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,11 +40,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ImageButton ibMainCalorieReset;
+    ImageButton ibMainCalorieReset, ibMainFoodName;
     AutoCompleteTextView tvMainAtuoText1;
     Button btnMainConfirm, btnMainReset, btnMainExercise;
     TextView tvMainText1, tvMainText2, tvMainText3, tvMainCalorieBar1, tvMainCalorieBar2;
-    EditText etMainText;
+    EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat;
     ProgressBar pbMainBar;
     String autoText1;
     double autoText2, calorie, carbohydrate, protein, fat, car, pro, fa;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> nameData;
     String num[] = {"0.2", "0.4", "0.6", "0.8", "1", "1.5", "2", "2.5", "3"};
     DataBaseHelper dataBaseHelper;
+    View foodView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ac = getSupportActionBar();
         ac.hide();
         ibMainCalorieReset = (ImageButton)findViewById(R.id.ibMainCalorieReset);
+        ibMainFoodName = (ImageButton)findViewById(R.id.ibMainFoodName);
         tvMainAtuoText1 = (AutoCompleteTextView)findViewById(R.id.tvMainAutoText1);
         btnMainConfirm = (Button)findViewById(R.id.btnMainConfirm);
         btnMainReset = (Button)findViewById(R.id.btnMainReset);
@@ -70,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         tvMainText3 = (TextView)findViewById(R.id.tvMainText3);
         tvMainCalorieBar1 = (TextView)findViewById(R.id.tvMainCalorieBar1);
         tvMainCalorieBar2 = (TextView)findViewById(R.id.tvMainCalorieBar2);
-        dataBaseHelper = new DataBaseHelper(this);
 
+        dataBaseHelper = new DataBaseHelper(this);
         nameData = new ArrayList<String>();
         maxCaloriebar();
         getVal();
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                 etMainText.setText(num[position]);
                             }
                         });
+                builder.setCancelable(false);
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -147,13 +151,51 @@ public class MainActivity extends AppCompatActivity {
         ibMainCalorieReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+                clearState();
+                /*SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
                 dataBaseHelper.onUpgrade(db,1,2);
-                db.close();
+                db.close();*/
                 Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
                 startActivity(intent);
             }
         });
+        // db에 음식 추가 버튼
+        ibMainFoodName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodView = (View)View.inflate(MainActivity.this,R.layout.foodname,null);
+                etFoodName = (EditText)foodView.findViewById(R.id.etFoodName);
+                etFoodCal = (EditText)foodView.findViewById(R.id.etFoodCal);
+                etFoodCar = (EditText)foodView.findViewById(R.id.etFoodCar);
+                etFoodPro = (EditText)foodView.findViewById(R.id.etFoodPro);
+                etFoodFat = (EditText)foodView.findViewById(R.id.etFoodFat);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("추가할 음식");
+                builder.setView(foodView);
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(TextUtils.isEmpty(etFoodName.getText().toString())){
+                            showToast("이름을 정확히 입력 해주세요.");
+                        }
+                        else{
+                            SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+                            db.execSQL("INSERT INTO foodinformation VALUES('" + etFoodName.getText().toString()
+                                    + "','" + etFoodCal.getText().toString()
+                                    + "','" + etFoodCar.getText().toString()
+                                    + "','" + etFoodPro.getText().toString()
+                                    + "','" + etFoodFat.getText().toString() + "');");
+                            db.close();
+                        }
+                    }
+                });
+                builder.setNegativeButton("취소",null);
+                builder.setCancelable(false);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+        // reset 버튼 (누적 값 초기화)
         btnMainReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,5 +254,12 @@ public class MainActivity extends AppCompatActivity {
     double div(double divide){
         divide = (int)(divide*10)/10;
         return divide;
+    }
+    protected void clearState(){ // 초기화 할 수 있는 메소드를 새로 만들어 주었다.
+        // 전에 저장되었던 데이터를 초기화 할 때 사용한다.
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 }

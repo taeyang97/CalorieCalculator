@@ -73,13 +73,5 @@
             android:text="다른 운동 선택"
             android:backgroundTint="#000000"
             android:layout_marginTop="50dp"/>
-        <Button
-            android:id="@+id/btnExercisesCal"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="칼로리 계산"
-            android:backgroundTint="#000000"
-            android:layout_marginTop="30dp"/>
     </LinearLayout>
 </LinearLayout>

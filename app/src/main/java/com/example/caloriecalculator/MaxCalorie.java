@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.example.caloriecalculator.DataBaseHelper.DB_PATH;
 
@@ -31,6 +32,7 @@ public class MaxCalorie extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqlDB;
     String[] select = {"", String.valueOf(25), String.valueOf(30), String.valueOf(35), String.valueOf(40)};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +61,7 @@ public class MaxCalorie extends AppCompatActivity {
                     if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
                         average = (Double.parseDouble(etMaxCalorie.getText().toString()) - 100) * 0.9;
                         maxCalorie = (int)(average * Integer.parseInt(select[position]));
-                    }
-                    if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
-                        tvMaxCalorie.setText("나의 Max 칼로리 = " + maxCalorie);
+                        tvMaxCalorie.setText("나의 Max 칼로리 값   " + maxCalorie);
                         btnMaxCalorie.setEnabled(true);
                     }
                 } catch (NumberFormatException e){
@@ -106,5 +106,21 @@ public class MaxCalorie extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onPause() { // 하나만 저장할 수 있는 저장소가 있다.
+        super.onPause();
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE); // 데이터를 임시로 저장하는 클래스
+        SharedPreferences.Editor editor = preferences.edit();// 데이터를 저장할 수 있는 변수
+        editor.putString("vkey", String.valueOf(maxCalorie));
+        editor.commit(); // commit() 메소드를 사용해야 실제로 저장이 된다.
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE); // 저장소의 있는 값을 받아온다.
+        if((preferences != null) && (preferences.contains("vkey"))) { // 아무 값이 없지 않거나, 값이 존재할 경우 실행
+            tvMaxCalorie.setText("나의 Max 칼로리 값   " + Integer.parseInt(preferences.getString("vkey","")));
+        }
+    }
 }

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class ExerciseLast extends AppCompatActivity {
-    Button btnExerciseSel, btnExerciseCal;
+    Button btnExerciseSel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +17,6 @@ public class ExerciseLast extends AppCompatActivity {
         ActionBar ac = getSupportActionBar();
         ac.hide();
         btnExerciseSel = (Button)findViewById(R.id.btnExercisesSel);
-        btnExerciseCal = (Button)findViewById(R.id.btnExercisesCal);
 
         btnExerciseSel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -25,13 +24,6 @@ public class ExerciseLast extends AppCompatActivity {
                 finish();
             }
 
-        });
-        btnExerciseCal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
-            }
         });
     }
 }
