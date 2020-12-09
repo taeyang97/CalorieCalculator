@@ -24,7 +24,7 @@ import android.widget.Toast;
 public class Exercise extends AppCompatActivity {
     GridView gridView;
     MyAdapter myAdapter;
-
+    int maxCalorie, todayCalorie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +79,13 @@ public class Exercise extends AppCompatActivity {
                             break;
                         case MotionEvent.ACTION_UP:
                             imageView.setPadding(30,30,30,30);
-                            Intent intent = new Intent(getApplicationContext(),ExerciseLast.class);
-                            startActivity(intent);
+                            Intent mintent = new Intent(getApplicationContext(),ExerciseLast.class);
+                            Intent gIntent = getIntent();
+                            maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
+                            todayCalorie = gIntent.getIntExtra("TodayCalorie",0);
+                            mintent.putExtra("MaxCalorie",maxCalorie);
+                            mintent.putExtra("TodayCalorie",todayCalorie);
+                            startActivity(mintent);
                             break;
                     }
                     return true;

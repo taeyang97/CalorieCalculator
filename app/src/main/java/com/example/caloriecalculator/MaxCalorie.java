@@ -96,13 +96,14 @@ public class MaxCalorie extends AppCompatActivity {
         btnMaxCalorie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDB = dataBaseHelper.getWritableDatabase();
+                /*sqlDB = dataBaseHelper.getWritableDatabase();
                 sqlDB.execSQL("INSERT INTO maxCalorie VALUES(" + maxCalorie + ");");
-                sqlDB.close();
-                Toast.makeText(getApplicationContext(),"max값을 정하였습니다.",Toast.LENGTH_SHORT).show();
+                sqlDB.close();*/ //db로 넘겨주기
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
+                Intent mintent = new Intent(getApplicationContext(),MainActivity.class);
+                mintent.putExtra("MaxCalorie",maxCalorie);
+                Toast.makeText(getApplicationContext(),"max값을 정하였습니다.",Toast.LENGTH_SHORT).show();
+                startActivity(mintent);
             }
         });
     }

@@ -48,7 +48,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 구조 생성로직
         Log.d(TAG,"onCreate()");
-        db.execSQL("CREATE TABLE IF NOT EXISTS maxCalorie (value INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS maxCalorie (max INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS todayCalorie (today INTEGER);");
     }
 
     @Override
@@ -96,8 +97,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // max칼로리 값을 호출해주는 메소드
     static public int getmaxCalorie(Context context,int maxCalorie){
         DataBaseHelper dbHelper = new DataBaseHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT value FROM maxCalorie;",null);
+        SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlDB.rawQuery("SELECT max FROM maxCalorie;",null);
         while (cursor.moveToNext())
         {
             maxCalorie=cursor.getInt(0);
@@ -105,5 +106,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         dbHelper.close();
         return maxCalorie;
+    }
+    // today칼로리 값을 호출해주는 메소드
+    static public int gettodayCalorie(Context context,int todayCalorie){
+        DataBaseHelper dbHelper = new DataBaseHelper(context);
+        SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlDB.rawQuery("SELECT today FROM todayCalorie;",null);
+        while (cursor.moveToNext())
+        {
+            todayCalorie=cursor.getInt(0);
+        }
+        cursor.close();
+        dbHelper.close();
+        return todayCalorie;
     }
 }

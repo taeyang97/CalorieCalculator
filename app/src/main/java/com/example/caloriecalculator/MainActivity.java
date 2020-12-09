@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     double autoText2, calorie, carbohydrate, protein, fat, car, pro, fa;
     int position, maxCalorie, progress;
     ArrayList<String> nameData;
+    ArrayAdapter<String> adapter;
     String num[] = {"0.2", "0.4", "0.6", "0.8", "1", "1.5", "2", "2.5", "3"};
     DataBaseHelper dataBaseHelper;
+    SQLiteDatabase sqlDB;
     View foodView;
 
     @Override
@@ -78,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
         nameData = new ArrayList<String>();
         maxCaloriebar();
         getVal();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line,nameData);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,nameData);
         tvMainAtuoText1.setAdapter(adapter);
         tvMainAtuoText1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,10 +127,15 @@ public class MainActivity extends AppCompatActivity {
                 tvMainText1.setText(autoText1 + etMainText.getText().toString() + "인분");
                 tvMainText2.setText((int)autoText2 + " kcal");
                 tvMainText3.setText("\n탄수화물 : " + car +
-                "\n단백질 : " + pro + "\n지방 : " + fa);
+                        "\n단백질 : " + pro + "\n지방 : " + fa);
                 progress += (int)autoText2;
                 pbMainBar.setProgress(progress);
                 tvMainCalorieBar1.setText(String.valueOf(progress));
+
+                /*sqlDB = dataBaseHelper.getWritableDatabase();
+                sqlDB.execSQL("INSERT INTO todayCalorie VALUES(" + autoText2 + ");");
+                sqlDB.close();*/ // db로 today칼로리 넘겨주는 코딩
+
                 if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
                     btnMainReset.setVisibility(View.VISIBLE);
                 }
@@ -140,8 +146,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
-                    Intent intent = new Intent(getApplicationContext(),Exercise.class);
-                    startActivity(intent);
+                    Intent mintent = new Intent(getApplicationContext(),Exercise.class);
+                    mintent.putExtra("MaxCalorie",maxCalorie);
+                    mintent.putExtra("TodayCalorie",progress);
+                    startActivity(mintent);
                 } else {
                     showToast("칼로리 섭취해야 운동을 보여줍니다.");
                 }
@@ -179,13 +187,13 @@ public class MainActivity extends AppCompatActivity {
                             showToast("이름을 정확히 입력 해주세요.");
                         }
                         else{
-                            SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-                            db.execSQL("INSERT INTO foodinformation VALUES('" + etFoodName.getText().toString()
+                            sqlDB= dataBaseHelper.getWritableDatabase();
+                            sqlDB.execSQL("INSERT INTO foodinformation VALUES('" + etFoodName.getText().toString()
                                     + "','" + etFoodCal.getText().toString()
                                     + "','" + etFoodCar.getText().toString()
                                     + "','" + etFoodPro.getText().toString()
                                     + "','" + etFoodFat.getText().toString() + "');");
-                            db.close();
+                            sqlDB.close();
                         }
                     }
                 });
@@ -213,15 +221,19 @@ public class MainActivity extends AppCompatActivity {
     }
     // maxCalroe값 호출해 오는 메소드
     public void maxCaloriebar(){
-        maxCalorie = DataBaseHelper.getmaxCalorie(this,maxCalorie);
+        /*maxCalorie = DataBaseHelper.getmaxCalorie(this,maxCalorie);
+        tvMainCalorieBar2.setText(String.valueOf(maxCalorie));
+        pbMainBar.setMax(maxCalorie);*/
+        Intent gIntent = getIntent();
+        maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
         tvMainCalorieBar2.setText(String.valueOf(maxCalorie));
         pbMainBar.setMax(maxCalorie);
     }
 
     //DB 음식 이름 호출하는 메소드
     public void getVal() {
-        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT name FROM foodinformation;",null);
+        sqlDB = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqlDB.rawQuery("SELECT name FROM foodinformation;",null);
         while (cursor.moveToNext())
         {
             nameData.add(cursor.getString(0));
@@ -232,8 +244,8 @@ public class MainActivity extends AppCompatActivity {
 
     //DB 음식 칼로리 호출하는 메소드
     public void getVal2() {
-        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT calorie, carbohydrate, protein, fat FROM foodinformation WHERE name='" +
+        sqlDB = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqlDB.rawQuery("SELECT calorie, carbohydrate, protein, fat FROM foodinformation WHERE name='" +
                 tvMainAtuoText1.getText().toString() + "';",null);
         while (cursor.moveToNext())
         {
