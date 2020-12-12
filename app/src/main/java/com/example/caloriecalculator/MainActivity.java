@@ -42,7 +42,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     ImageButton ibMainCalorieReset, ibMainFoodName;
     AutoCompleteTextView tvMainAtuoText1;
-    Button btnMainConfirm, btnMainReset, btnMainExercise;
+    Button btnMainConfirm, btnMainReset, btnMainExercise, btnload;
     TextView tvMainText1, tvMainText2, tvMainText3, tvMainCalorieBar1, tvMainCalorieBar2;
     EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat;
     ProgressBar pbMainBar;
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         btnMainConfirm = (Button)findViewById(R.id.btnMainConfirm);
         btnMainReset = (Button)findViewById(R.id.btnMainReset);
         btnMainExercise = (Button)findViewById(R.id.btnMainExercise);
+        btnload = (Button)findViewById(R.id.btnload);
         etMainText = (EditText) findViewById(R.id.etMainText);
         pbMainBar = (ProgressBar)findViewById(R.id.pbMainbar);
         tvMainText1 = (TextView)findViewById(R.id.tvMainText1);
@@ -88,7 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 getVal2();
             }
         });
-
+        btnload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),LoadCalorie.class);
+                startActivity(intent);
+            }
+        });
         //음식 섭취량 대화상자 호출
         etMainText.setOnClickListener(new View.OnClickListener() {
             @Override
