@@ -17,7 +17,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private ArrayList<ItemData> mPersons;
     private LayoutInflater mInflate;
     private Context mContext;
-    OnItemDataClickListener listener;
 
     public RecyclerAdapter(Context context, ArrayList<ItemData> persons) {
         this.mContext = context;
