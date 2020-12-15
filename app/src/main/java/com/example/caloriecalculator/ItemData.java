@@ -1,20 +1,28 @@
 package com.example.caloriecalculator;
 
 public class ItemData {
-    String title;
-    String subtitle;
+    String _id, date, today, max;
 
-    public ItemData(String title, String subtitle) {
-        this.title = title;
-        this.subtitle = subtitle;
+    public ItemData(String _id, String date, String today, String max) {
+        this._id = _id;
+        this.date = date;
+        this.today = today;
+        this.max = max;
+    }
+
+    public String get_id() {
+        return _id;
     }
 
     public String getTitle() {
-        return title;
+        return date;
     }
 
     public String getSubtitle() {
-        return subtitle;
+        return today;
     }
 
+    public String getMax() {
+        return max;
+    }
 }

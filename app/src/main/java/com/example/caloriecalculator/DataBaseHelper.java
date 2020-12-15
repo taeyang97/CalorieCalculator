@@ -1,5 +1,6 @@
 package com.example.caloriecalculator;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,6 +20,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "CalorieCarculator.db";
     private SQLiteDatabase mDataBase;
     private Context mContext;
+    String _id,date,today,max;
 
     public DataBaseHelper(Context context) {
         super(context,DB_NAME,null,1);
@@ -48,8 +50,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 구조 생성로직
         Log.d(TAG,"onCreate()");
-        db.execSQL("CREATE TABLE IF NOT EXISTS maxCalorie (max INTEGER);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS todayCalorie (today INTEGER);");
+        db.execSQL("DROP TABLE IF EXISTS loadCalorie;");
+        db.execSQL("CREATE TABLE loadCalorie (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "date TEXT, today TEXT, max TEXT);");
     }
 
     @Override
@@ -63,7 +66,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 테이블 삭제하고 onCreate() 다시 로드시킨다.
         Log.d(TAG,"onUpgrade() : DB Schema Modified and Excuting onCreate()");
-        db.execSQL("DROP TABLE IF EXISTS maxCalorie");
+        db.execSQL("DROP TABLE IF EXISTS loadCalorie;");
         onCreate(db);
     }
 
@@ -93,9 +96,59 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d("dbCopy","IOException 발생함");
         }
     }
+    // 데이터를 추가하고 ture/false값을 반환한다.
+    public boolean insertData(int _id, String date, String today, String max){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("_id", _id);
+        values.put("date", date);
+        values.put("today", today);
+        values.put("max", max);
+        long result = sqlDB.insert("loadCalorie", null, values);
+        if(result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
 
+    // 저장 목록 지우기
+    public Integer deleteDate(String _id){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        return sqlDB.delete("loadCalorie", "_id = ?", new String[] {_id});
+    }
+    // 모든 DB ID 별로 나타내기
+    public Cursor getAllData(){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        Cursor cursor = sqlDB.rawQuery("select * from loadCalorie order by _id desc",null);
+        return cursor;
+    }
+    /*
+        DB에서 데이터를 모두 가져와서 ResyclerView 어답터에서 사용할 Items 배열에
+        순더대로 추가하는 함수. 여기저기에서 불러서 사용해야 할경우를 대비 여기에 넣어 둠
+     */
+    public void updateItems() {
+        DataBaseHelper dbHelper = new DataBaseHelper(mContext);
+        SQLiteDatabase sqlDB = dbHelper.getWritableDatabase();
+
+        Fragment1.items.clear(); // 초기화
+        Cursor cursor = sqlDB.rawQuery("SELECT * FROM loadCalorie",null);
+        if(cursor.getCount() != 0){
+            while (cursor.moveToNext())
+            {
+                _id=cursor.getString(0);
+                date=cursor.getString(1);
+                today=cursor.getString(2);
+                max=cursor.getString(3);
+
+                Fragment1.items.add(0, new ItemData(_id, date, today, max));
+            }
+        }
+        cursor.close();
+        dbHelper.close();
+    }
     // max칼로리 값을 호출해주는 메소드
-    static public int getmaxCalorie(Context context,int maxCalorie){
+    /*static public int getmaxCalorie(Context context,int maxCalorie){
         DataBaseHelper dbHelper = new DataBaseHelper(context);
         SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
         Cursor cursor = sqlDB.rawQuery("SELECT max FROM maxCalorie;",null);
@@ -106,9 +159,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         dbHelper.close();
         return maxCalorie;
-    }
+    }*/
     // today칼로리 값을 호출해주는 메소드
-    static public int gettodayCalorie(Context context,int todayCalorie){
+    /*static public int gettodayCalorie(Context context,int todayCalorie){
         DataBaseHelper dbHelper = new DataBaseHelper(context);
         SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
         Cursor cursor = sqlDB.rawQuery("SELECT today FROM todayCalorie;",null);
@@ -119,5 +172,5 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         dbHelper.close();
         return todayCalorie;
-    }
+    }*/
 }

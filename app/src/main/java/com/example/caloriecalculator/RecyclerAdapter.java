@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,8 +37,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.title.setText(mPersons.get(position).title);
-        holder.subTitle.setText(mPersons.get(position).subtitle);
+        holder.date.setText(mPersons.get(position).date);
+        holder.today.setText(mPersons.get(position).today + "kal");
+        holder.max.setText(mPersons.get(position).max + "kal");
+        holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
+        holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
+        holder.ibClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataBaseHelper dataBaseHelper;
+                dataBaseHelper = new DataBaseHelper(mContext);
+                dataBaseHelper.deleteDate(mPersons.get(position)._id);
+                dataBaseHelper.updateItems();
+                Fragment1.rAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -45,13 +60,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
-        TextView title;
-        TextView subTitle;
+        TextView _id, date, today, max, tvLoadTodayMaxCal;
+        ImageButton ibClear;
+        ProgressBar pbLoadBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.tvTitle);
-            subTitle = itemView.findViewById(R.id.tvSubTitle);
+            _id = itemView.findViewById(R.id.tv_id);
+            date = itemView.findViewById(R.id.tvDate);
+            today = itemView.findViewById(R.id.tvToday);
+            max = itemView.findViewById(R.id.tvMax);
+            tvLoadTodayMaxCal = itemView.findViewById(R.id.tvLoadTodayMaxCal);
+            ibClear = itemView.findViewById(R.id.ibClear);
+            pbLoadBar = itemView.findViewById(R.id.pbLoadBar);
         }
     }
 }
