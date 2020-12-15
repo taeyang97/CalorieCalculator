@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
-                    Intent mintent = new Intent(getApplicationContext(),Exercise.class);
+                    Intent mintent = new Intent(getApplicationContext(),ExerciseLast.class);
                     mintent.putExtra("MaxCalorie",maxCalorie);
                     mintent.putExtra("TodayCalorie",progress);
                     startActivity(mintent);
