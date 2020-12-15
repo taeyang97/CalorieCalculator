@@ -97,10 +97,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
     // 데이터를 추가하고 ture/false값을 반환한다.
-    public boolean insertData(int _id, String date, String today, String max){
+    public boolean insertData(String date, String today, String max){
         SQLiteDatabase sqlDB = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("_id", _id);
         values.put("date", date);
         values.put("today", today);
         values.put("max", max);

@@ -79,7 +79,7 @@ public class ExerciseLast extends AppCompatActivity {
                 max = String.valueOf(maxCalorie);
 
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-                boolean isInserted = dataBaseHelper.insertData(_id,date,today,max);
+                boolean isInserted = dataBaseHelper.insertData(date,today,max);
                 if(isInserted == true){
                     Toast.makeText(getApplicationContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
                     finish();

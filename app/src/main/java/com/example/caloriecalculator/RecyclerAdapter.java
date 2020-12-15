@@ -37,11 +37,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder._id.setText(mPersons.get(position)._id);
         holder.date.setText(mPersons.get(position).date);
         holder.today.setText(mPersons.get(position).today + "kal");
         holder.max.setText(mPersons.get(position).max + "kal");
         holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
         holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
+        holder.pbLoadBar.setMax(Integer.parseInt(mPersons.get(position).max));
         holder.ibClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
