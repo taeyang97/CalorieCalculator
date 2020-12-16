@@ -28,11 +28,12 @@ import static com.example.caloriecalculator.DataBaseHelper.DB_PATH;
 public class MaxCalorie extends AppCompatActivity {
     double average;
     int maxCalorie;
+    EditText etMaxCalorie;
     TextView tvMaxCalorie;
+    Button btnMaxCalorie;
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqlDB;
     String[] select = {"", String.valueOf(25), String.valueOf(30), String.valueOf(35), String.valueOf(40)};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +46,9 @@ public class MaxCalorie extends AppCompatActivity {
             startActivity(intent);
         }*/
         dataBaseHelper = new DataBaseHelper(this);
-        EditText etMaxCalorie = (EditText)findViewById(R.id.etMaxCalorie);
+        etMaxCalorie = (EditText)findViewById(R.id.etMaxCalorie);
         Spinner spinMaxCalorie = (Spinner) findViewById(R.id.spinMaxCalorie);
-        Button btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
+        btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
         tvMaxCalorie = (TextView)findViewById(R.id.tvMaxCalorie);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -93,9 +94,9 @@ public class MaxCalorie extends AppCompatActivity {
             }
         });*/
 
-        btnMaxCalorie.setOnClickListener(new View.OnClickListener() {
+        btnMaxCalorie.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 /*sqlDB = dataBaseHelper.getWritableDatabase();
                 sqlDB.execSQL("INSERT INTO maxCalorie VALUES(" + maxCalorie + ");");
                 sqlDB.close();*/ //db로 넘겨주기
@@ -122,6 +123,12 @@ public class MaxCalorie extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE); // 저장소의 있는 값을 받아온다.
         if((preferences != null) && (preferences.contains("vkey"))) { // 아무 값이 없지 않거나, 값이 존재할 경우 실행
             tvMaxCalorie.setText("나의 Max 칼로리 값   " + Integer.parseInt(preferences.getString("vkey","")));
+            maxCalorie = Integer.parseInt(preferences.getString("vkey",""));
+            if(maxCalorie!=0) {
+                Intent mintent = new Intent(getApplicationContext(), MainActivity.class);
+                mintent.putExtra("MaxCalorie", maxCalorie);
+                startActivity(mintent);
+            }
         }
     }
 }

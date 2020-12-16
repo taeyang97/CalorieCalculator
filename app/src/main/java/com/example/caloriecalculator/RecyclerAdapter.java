@@ -1,6 +1,8 @@
 package com.example.caloriecalculator;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,16 +44,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.today.setText(mPersons.get(position).today + "kal");
         holder.max.setText(mPersons.get(position).max + "kal");
         holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
-        holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
         holder.pbLoadBar.setMax(Integer.parseInt(mPersons.get(position).max));
+        holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
         holder.ibClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataBaseHelper dataBaseHelper;
-                dataBaseHelper = new DataBaseHelper(mContext);
-                dataBaseHelper.deleteDate(mPersons.get(position)._id);
-                dataBaseHelper.updateItems();
-                Fragment1.rAdapter.notifyDataSetChanged();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("기록을 제거하시겠습니까?");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DataBaseHelper dataBaseHelper;
+                        dataBaseHelper = new DataBaseHelper(mContext);
+                        dataBaseHelper.deleteDate(mPersons.get(position)._id);
+                        dataBaseHelper.updateItems();
+                        Fragment1.rAdapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("취소",null);
+                builder.setCancelable(false);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

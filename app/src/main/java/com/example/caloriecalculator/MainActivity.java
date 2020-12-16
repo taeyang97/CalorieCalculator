@@ -89,17 +89,18 @@ public class MainActivity extends AppCompatActivity {
                 getVal2();
             }
         });
-        btnload.setOnClickListener(new View.OnClickListener() {
+        // 칼로리 저장 목록 버튼
+        btnload.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),LoadCalorie.class);
                 startActivity(intent);
             }
         });
         //음식 섭취량 대화상자 호출
-        etMainText.setOnClickListener(new View.OnClickListener() {
+        etMainText.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("음식 섭취량")
                         .setSingleChoiceItems(num, -1, new DialogInterface.OnClickListener() {
@@ -120,38 +121,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 음식 확인 버튼
-        btnMainConfirm.setOnClickListener(new View.OnClickListener() {
+        btnMainConfirm.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
-                autoText1 = tvMainAtuoText1.getText().toString();
-                autoText2 = Double.parseDouble(etMainText.getText().toString()) * calorie;
-                car += Double.parseDouble(etMainText.getText().toString()) * carbohydrate;
-                pro += Double.parseDouble(etMainText.getText().toString()) * protein;
-                fa += Double.parseDouble(etMainText.getText().toString()) * fat;
-                div(car);
-                div(pro);
-                div(fa);
-                tvMainText1.setText(autoText1 + etMainText.getText().toString() + "인분");
-                tvMainText2.setText((int)autoText2 + " kcal");
-                tvMainText3.setText("\n탄수화물 : " + car +
-                        "\n단백질 : " + pro + "\n지방 : " + fa);
-                progress += (int)autoText2;
-                pbMainBar.setProgress(progress);
-                tvMainCalorieBar1.setText(String.valueOf(progress));
+            public void onSingleClick(View v) {
+                try{
+                    autoText1 = tvMainAtuoText1.getText().toString();
+                    autoText2 = Double.parseDouble(etMainText.getText().toString()) * calorie;
+                    car += Double.parseDouble(etMainText.getText().toString()) * carbohydrate;
+                    pro += Double.parseDouble(etMainText.getText().toString()) * protein;
+                    fa += Double.parseDouble(etMainText.getText().toString()) * fat;
+                    div(car);
+                    div(pro);
+                    div(fa);
+                    tvMainText1.setText(autoText1 + etMainText.getText().toString() + "인분");
+                    tvMainText2.setText((int)autoText2 + " kcal");
+                    tvMainText3.setText("\n탄수화물 : " + car +
+                            "\n단백질 : " + pro + "\n지방 : " + fa);
+                    progress += (int)autoText2;
+                    pbMainBar.setProgress(progress);
+                    tvMainCalorieBar1.setText(String.valueOf(progress));
 
-                /*sqlDB = dataBaseHelper.getWritableDatabase();
-                sqlDB.execSQL("INSERT INTO todayCalorie VALUES(" + autoText2 + ");");
-                sqlDB.close();*/ // db로 today칼로리 넘겨주는 코딩
+                    /*sqlDB = dataBaseHelper.getWritableDatabase();
+                    sqlDB.execSQL("INSERT INTO todayCalorie VALUES(" + autoText2 + ");");
+                    sqlDB.close();*/ // db로 today칼로리 넘겨주는 코딩
 
-                if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
-                    btnMainReset.setVisibility(View.VISIBLE);
+                    if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
+                        btnMainReset.setVisibility(View.VISIBLE);
+                    }
+                }catch (NumberFormatException e){
+                    showToast("숫자를 입력해주세요.");
                 }
             }
         });
         // 운동을 보여주는 버튼
-        btnMainExercise.setOnClickListener(new View.OnClickListener() {
+        btnMainExercise.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
                     Intent mintent = new Intent(getApplicationContext(),ExerciseLast.class);
                     mintent.putExtra("MaxCalorie",maxCalorie);
@@ -163,9 +168,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 칼로리 리셋 버튼
-        ibMainCalorieReset.setOnClickListener(new View.OnClickListener() {
+        ibMainCalorieReset.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 clearState();
                 /*SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
                 dataBaseHelper.onUpgrade(db,1,2);
@@ -175,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // db에 음식 추가 버튼
-        ibMainFoodName.setOnClickListener(new View.OnClickListener() {
+        ibMainFoodName.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 foodView = (View)View.inflate(MainActivity.this,R.layout.foodname,null);
                 etFoodName = (EditText)foodView.findViewById(R.id.etFoodName);
                 etFoodCal = (EditText)foodView.findViewById(R.id.etFoodCal);
@@ -201,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
                                     + "','" + etFoodPro.getText().toString()
                                     + "','" + etFoodFat.getText().toString() + "');");
                             sqlDB.close();
+                            getVal2();
+                            tvMainAtuoText1.setAdapter(adapter);
                         }
                     }
                 });
@@ -211,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // reset 버튼 (누적 값 초기화)
-        btnMainReset.setOnClickListener(new View.OnClickListener() {
+        btnMainReset.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 progress=0;
                 pbMainBar.setProgress(progress);
                 tvMainCalorieBar1.setText(String.valueOf(progress));
@@ -223,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
                 tvMainText1.setText("");
                 tvMainText2.setText("");
                 tvMainText3.setText("");
+                btnMainReset.setVisibility(View.INVISIBLE);
+                showToast("초기화 되었습니다");
             }
         });
     }

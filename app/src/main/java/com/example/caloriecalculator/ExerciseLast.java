@@ -64,10 +64,9 @@ public class ExerciseLast extends AppCompatActivity {
         });
 
         // 저장하는 메소드
-        btnExerciseSel.setOnClickListener(new View.OnClickListener() {
+        btnExerciseSel.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onSingleClick(View v) {
 
                 Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
                 cYear = cal.get(Calendar.YEAR);
