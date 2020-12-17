@@ -2,6 +2,8 @@ package com.example.caloriecalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
@@ -19,6 +21,7 @@ public class LoadCalorie extends AppCompatActivity {
         setContentView(R.layout.loadcalorie);
         tabs=(TabLayout)findViewById(R.id.tabs);
         vPage1=(ViewPager)findViewById(R.id.vPage1);
+
         tabs.addTab(tabs.newTab().setText("칼로리 저장 목록"));
         tabs.addTab(tabs.newTab().setText("임시 페이지"));
         tabs.setTabGravity(tabs.GRAVITY_FILL);

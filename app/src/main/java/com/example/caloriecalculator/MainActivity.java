@@ -206,8 +206,6 @@ public class MainActivity extends AppCompatActivity {
                                     + "','" + etFoodPro.getText().toString()
                                     + "','" + etFoodFat.getText().toString() + "');");
                             sqlDB.close();
-                            getVal2();
-                            tvMainAtuoText1.setAdapter(adapter);
                         }
                     }
                 });
@@ -215,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
                 builder.setCancelable(false);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                getVal();
+                getVal2();
             }
         });
         // reset 버튼 (누적 값 초기화)

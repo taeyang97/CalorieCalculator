@@ -21,6 +21,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase mDataBase;
     private Context mContext;
     String _id,date,today,max;
+    String _ids,dates,memo;
 
     public DataBaseHelper(Context context) {
         super(context,DB_NAME,null,1);
@@ -53,6 +54,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS loadCalorie;");
         db.execSQL("CREATE TABLE loadCalorie (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "date TEXT, today TEXT, max TEXT);");
+        db.execSQL("DROP TABLE IF EXISTS memo;");
+        db.execSQL("CREATE TABLE memo (_ids INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "dates TEXT, memo TEXT);");
     }
 
     @Override
@@ -96,6 +100,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d("dbCopy","IOException 발생함");
         }
     }
+
     // 데이터를 추가하고 ture/false값을 반환한다.
     public boolean insertData(String date, String today, String max){
         SQLiteDatabase sqlDB = this.getWritableDatabase();
@@ -116,16 +121,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqlDB = this.getWritableDatabase();
         return sqlDB.delete("loadCalorie", "_id = ?", new String[] {_id});
     }
+
     // 모든 DB ID 별로 나타내기
     public Cursor getAllData(){
         SQLiteDatabase sqlDB = this.getWritableDatabase();
         Cursor cursor = sqlDB.rawQuery("select * from loadCalorie order by _id desc",null);
         return cursor;
     }
+
     /*
         DB에서 데이터를 모두 가져와서 ResyclerView 어답터에서 사용할 Items 배열에
         순더대로 추가하는 함수. 여기저기에서 불러서 사용해야 할경우를 대비 여기에 넣어 둠
      */
+
     public void updateItems() {
         DataBaseHelper dbHelper = new DataBaseHelper(mContext);
         SQLiteDatabase sqlDB = dbHelper.getWritableDatabase();
@@ -146,19 +154,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         dbHelper.close();
     }
-    // max칼로리 값을 호출해주는 메소드
-    /*static public int getmaxCalorie(Context context,int maxCalorie){
-        DataBaseHelper dbHelper = new DataBaseHelper(context);
-        SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlDB.rawQuery("SELECT max FROM maxCalorie;",null);
-        while (cursor.moveToNext())
-        {
-            maxCalorie=cursor.getInt(0);
-        }
-        cursor.close();
-        dbHelper.close();
-        return maxCalorie;
-    }*/
+
     // today칼로리 값을 호출해주는 메소드
     /*static public int gettodayCalorie(Context context,int todayCalorie){
         DataBaseHelper dbHelper = new DataBaseHelper(context);
@@ -172,4 +168,67 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         dbHelper.close();
         return todayCalorie;
     }*/
+
+    // 데이터를 추가하고 ture/false값을 반환한다.
+    public boolean insertDataMemo(String dates, String memo){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("dates", dates);
+        values.put("memo", memo);
+        long result = sqlDB.insert("memo", null, values);
+        if(result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //데이터 수정 업데이트
+    public boolean updateDataMemo(String _ids, String dates, String memo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("_ids", _ids);
+        values.put("dates", dates);
+        values.put("memo", memo);
+        db.update("memo", values, "_ids = ?", new String[] { _ids });
+        return true;
+    }
+
+    // 저장 목록 지우기
+    public Integer deleteDateMemo(String _ids){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        return sqlDB.delete("memo", "_ids = ?", new String[] {_ids});
+    }
+
+    // 모든 DB ID 별로 나타내기
+    public Cursor getAllDataMemo(){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        Cursor cursor = sqlDB.rawQuery("select * from memo order by _ids desc",null);
+        return cursor;
+    }
+
+    /*
+        DB에서 데이터를 모두 가져와서 ResyclerView 어답터에서 사용할 Items 배열에
+        순더대로 추가하는 함수. 여기저기에서 불러서 사용해야 할경우를 대비 여기에 넣어 둠
+     */
+
+    public void updateItemsMemo() {
+        DataBaseHelper dbHelper = new DataBaseHelper(mContext);
+        SQLiteDatabase sqlDB = dbHelper.getWritableDatabase();
+
+        Fragment2.items.clear(); // 초기화
+        Cursor cursor = sqlDB.rawQuery("SELECT * FROM memo",null);
+        if(cursor.getCount() != 0){
+            while (cursor.moveToNext())
+            {
+                _ids=cursor.getString(0);
+                dates=cursor.getString(1);
+                memo=cursor.getString(2);
+
+                Fragment2.items.add(0, new ItemData(_ids, dates, memo));
+            }
+        }
+        cursor.close();
+        dbHelper.close();
+    }
 }
