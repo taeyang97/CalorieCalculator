@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="음식 이름"
             android:textSize="20sp"
@@ -32,18 +32,17 @@
             android:layout_marginHorizontal="30dp" />
         <AutoCompleteTextView
             android:id="@+id/tvMainAutoText1"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="입력하세요"
             android:gravity="center"
-            android:layout_marginHorizontal="30dp"
             android:maxLines="1"
-            android:completionThreshold="1"/>
+            android:completionThreshold="1"
+            android:layout_marginHorizontal="30dp"/>
         <ImageButton
             android:id="@+id/ibMainFoodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:src="@drawable/add"
             android:backgroundTint="#ffffff"/>
     </LinearLayout>
@@ -52,7 +51,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="음식 인분"
             android:textSize="20sp"
@@ -60,7 +59,7 @@
             android:layout_marginHorizontal="30dp"/>
         <EditText
             android:id="@+id/etMainText"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="입력하세요"
