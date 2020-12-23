@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".ExerciseLast">
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,10 +27,22 @@
                 android:id="@+id/btnExercisesSel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
                 android:text="저장하기"
                 android:backgroundTint="#000000" />
+            <Button
+                android:id="@+id/btnExerciseClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="운동완료"
+                android:backgroundTint="#000000"/>
+            <EditText
+                android:id="@+id/etExerciseClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="kal소모량"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:gravity="center"/>
         </LinearLayout>
 
         <TextView

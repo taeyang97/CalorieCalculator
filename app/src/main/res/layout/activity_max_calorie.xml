@@ -5,96 +5,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="20dp"
+    android:background="@drawable/background"
     tools:context=".MaxCalorie">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="30dp"
-        android:text="나의 Max칼로리"
-        android:textSize="40sp"
-        android:textColor="#446280"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="표준체중 = (나의 키 -100) * 0.9\n
-표준체중 * 활동지수=MAX칼로리\n
-활동 지수\n\n
-
-25\n
-앉아서 생활하거나 가벼운 움직임만 하는 경우\n\n
-
-30~35\n
-규칙적인 생활로 활동량이 보통이라고 생각하는 경우\n\n
-
-40\n
-육체노동으로 활동량이 많은 경우\n\n
-"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="left"
-            android:layout_marginLeft="30dp"
-            android:text="나의 키 입력"
-            android:textSize="24sp"
-            android:textColor="#446280"/>
-        <EditText
-            android:id="@+id/etMaxCalorie"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:gravity="center"
-            android:layout_marginHorizontal="20dp"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:hint="입력하세요"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_marginBottom="30dp"
+            android:text="나의 Max칼로리"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="#446280"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="left"
-            android:layout_marginLeft="30dp"
-            android:text="나의 활동지수 입력"
-            android:textSize="24sp"
-            android:textColor="#446280"/>
-        <Spinner
-            android:id="@+id/spinMaxCalorie"
+            android:gravity="center"
+            android:text="표준체중 = (나의 키 -100) * 0.9\n\n
+    표준체중 * 활동지수=MAX칼로리\n
+    활동 지수\n\n
+
+    25\n
+    앉아서 생활하거나 가벼운 움직임만 하는 경우\n\n
+
+    30~35\n
+    규칙적인 생활로 활동량이 보통이라고 생각하는 경우\n\n
+
+    40\n
+    육체노동으로 활동량이 많은 경우\n\n
+    "/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:layout_marginLeft="30dp"
+                android:text="나의 키 입력"
+                android:textSize="24sp"
+                android:textColor="#446280"/>
+            <EditText
+                android:id="@+id/etMaxCalorie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:layout_marginHorizontal="20dp"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:hint="입력하세요"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:layout_marginLeft="30dp"
+                android:text="나의 활동지수 입력"
+                android:textSize="24sp"
+                android:textColor="#446280"/>
+            <Spinner
+                android:id="@+id/spinMaxCalorie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:background="@drawable/spinner_background"
+                android:theme="@style/SpinnerTheme"
+                android:layout_marginHorizontal="20dp" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnMaxCalorie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/black"
+            android:enabled="false"
+            android:text="확인" />
+        <TextView
+            android:id="@+id/tvMaxCalorie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@drawable/spinner_background"
-            android:theme="@style/SpinnerTheme"
-            android:layout_marginHorizontal="20dp" />
+            android:text="나의 Max 칼로리 값   "
+            android:textSize="20sp"
+            android:textColor="#446280"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/btnMaxCalorie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="40dp"
-        android:backgroundTint="@color/black"
-        android:enabled="false"
-        android:text="확인" />
-    <TextView
-        android:id="@+id/tvMaxCalorie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="나의 Max 칼로리 값   "
-        android:textSize="20sp"
-        android:textColor="#446280"/>
 </LinearLayout>

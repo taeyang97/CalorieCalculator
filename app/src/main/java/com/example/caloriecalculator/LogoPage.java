@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class LogoPage extends AppCompatActivity {
+public class LogoPage extends StatusActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

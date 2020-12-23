@@ -38,17 +38,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends StatusActivity {
     ImageButton ibMainCalorieReset, ibMainFoodName;
     AutoCompleteTextView tvMainAtuoText1;
     Button btnMainConfirm, btnMainReset, btnMainExercise, btnload;
     TextView tvMainText1, tvMainText2, tvMainText3, tvMainCalorieBar1, tvMainCalorieBar2;
     EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat;
     ProgressBar pbMainBar;
-    String autoText1;
+    String autoText1,date,today, dates;
     double autoText2, calorie, carbohydrate, protein, fat, car, pro, fa;
-    int position, maxCalorie, progress;
+    int position, maxCalorie, progress=0, cYear, cMonth, cDay;
     ArrayList<String> nameData;
     ArrayAdapter<String> adapter;
     String num[] = {"0.2", "0.4", "0.6", "0.8", "1", "1.5", "2", "2.5", "3"};
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActionBar ac = getSupportActionBar();
         ac.hide();
+
         ibMainCalorieReset = (ImageButton)findViewById(R.id.ibMainCalorieReset);
         ibMainFoodName = (ImageButton)findViewById(R.id.ibMainFoodName);
         tvMainAtuoText1 = (AutoCompleteTextView)findViewById(R.id.tvMainAutoText1);
@@ -79,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         nameData = new ArrayList<String>();
-        maxCaloriebar();
+        maxCalorieBar();
+        todayCalorieBar();
         getVal();
+        getVal2();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,nameData);
         tvMainAtuoText1.setAdapter(adapter);
         tvMainAtuoText1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,8 +128,12 @@ public class MainActivity extends AppCompatActivity {
         btnMainConfirm.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
+                if(progress!=0){
+                    dataBaseHelper.deleteDateTodayCalorie();
+                }
                 try{
                     autoText1 = tvMainAtuoText1.getText().toString();
+                    getVal2();
                     autoText2 = Double.parseDouble(etMainText.getText().toString()) * calorie;
                     car += Double.parseDouble(etMainText.getText().toString()) * carbohydrate;
                     pro += Double.parseDouble(etMainText.getText().toString()) * protein;
@@ -145,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
                     sqlDB.execSQL("INSERT INTO todayCalorie VALUES(" + autoText2 + ");");
                     sqlDB.close();*/ // db로 today칼로리 넘겨주는 코딩
 
+                    dataBaseHelper.insertDataTodayCalorie(dates,String.valueOf(progress));
+
                     if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
                         btnMainReset.setVisibility(View.VISIBLE);
                     }
@@ -157,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         btnMainExercise.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                if(!TextUtils.isEmpty(tvMainText2.getText().toString())){
+                if(progress != 0){
                     Intent mintent = new Intent(getApplicationContext(),ExerciseLast.class);
                     mintent.putExtra("MaxCalorie",maxCalorie);
                     mintent.putExtra("TodayCalorie",progress);
@@ -172,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 clearState();
+                if(progress!=0){
+                    dataBaseHelper.deleteDateTodayCalorie();
+                }
                 /*SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
                 dataBaseHelper.onUpgrade(db,1,2);
                 db.close();*/
@@ -206,6 +219,10 @@ public class MainActivity extends AppCompatActivity {
                                     + "','" + etFoodPro.getText().toString()
                                     + "','" + etFoodFat.getText().toString() + "');");
                             sqlDB.close();
+                            getVal();
+                            adapter.clear();
+                            adapter.addAll(nameData);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -231,12 +248,13 @@ public class MainActivity extends AppCompatActivity {
                 tvMainText2.setText("");
                 tvMainText3.setText("");
                 btnMainReset.setVisibility(View.INVISIBLE);
+                dataBaseHelper.deleteDateTodayCalorie();
                 showToast("초기화 되었습니다");
             }
         });
     }
-    // maxCalroe값 호출해 오는 메소드
-    public void maxCaloriebar(){
+    // maxCalorie값 호출해 오는 메소드
+    public void maxCalorieBar(){
         /*maxCalorie = DataBaseHelper.getmaxCalorie(this,maxCalorie);
         tvMainCalorieBar2.setText(String.valueOf(maxCalorie));
         pbMainBar.setMax(maxCalorie);*/
@@ -244,6 +262,35 @@ public class MainActivity extends AppCompatActivity {
         maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
         tvMainCalorieBar2.setText(String.valueOf(maxCalorie));
         pbMainBar.setMax(maxCalorie);
+    }
+
+    // todayCalorie값 호출해 오는 메소드
+    public void todayCalorieBar(){
+        sqlDB = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqlDB.rawQuery("SELECT * FROM todayCalorie;",null);
+        if(cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                date=cursor.getString(0);
+                today=cursor.getString(1);
+            }
+        }
+        cursor.close();
+        dataBaseHelper.close();
+
+        Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
+        cYear = cal.get(Calendar.YEAR);
+        cMonth = cal.get(Calendar.MONTH);
+        cDay = cal.get(Calendar.DAY_OF_MONTH); // 그 달의 일수
+
+        dates = cYear + "-" + (cMonth + 1) + "-" + cDay;
+        if(!TextUtils.isEmpty(date)){
+            if(date.equals(dates)){
+                progress = Integer.parseInt(today);
+                tvMainCalorieBar1.setText(today);
+                pbMainBar.setProgress(progress);
+                btnMainReset.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     //DB 음식 이름 호출하는 메소드
@@ -280,7 +327,8 @@ public class MainActivity extends AppCompatActivity {
     }
     // 소수점 첫째자리까지 구하는 메소드
     double div(double divide){
-        divide = (int)(divide*10)/10;
+        divide = Double.parseDouble(String.format("%.1f",divide));
+
         return divide;
     }
     protected void clearState(){ // 초기화 할 수 있는 메소드를 새로 만들어 주었다.

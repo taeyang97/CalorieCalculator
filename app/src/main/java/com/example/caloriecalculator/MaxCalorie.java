@@ -25,14 +25,12 @@ import java.util.ArrayList;
 
 import static com.example.caloriecalculator.DataBaseHelper.DB_PATH;
 
-public class MaxCalorie extends AppCompatActivity {
+public class MaxCalorie extends StatusActivity {
     double average;
     int maxCalorie;
     EditText etMaxCalorie;
     TextView tvMaxCalorie;
     Button btnMaxCalorie;
-    DataBaseHelper dataBaseHelper;
-    SQLiteDatabase sqlDB;
     String[] select = {"", String.valueOf(25), String.valueOf(30), String.valueOf(35), String.valueOf(40)};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +38,7 @@ public class MaxCalorie extends AppCompatActivity {
         setContentView(R.layout.activity_max_calorie);
         ActionBar ac = getSupportActionBar();
         ac.hide();
-        /*File folder = new File(DB_PATH);
-        if (folder.exists()) {
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);
-        }*/
-        dataBaseHelper = new DataBaseHelper(this);
+
         etMaxCalorie = (EditText)findViewById(R.id.etMaxCalorie);
         Spinner spinMaxCalorie = (Spinner) findViewById(R.id.spinMaxCalorie);
         btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
@@ -75,32 +68,11 @@ public class MaxCalorie extends AppCompatActivity {
 
             }
         });
-        /*etMaxCalorie2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                average = (Double.parseDouble(etMaxCalorie.getText().toString())-100)*0.9;
-                maxCalorie = (int)(average * Integer.parseInt(etMaxCalorie2.getText().toString()));
-                tvMaxCalorie.setText("나의 Max 칼로리 = "+maxCalorie);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
-
+        //메인 페이지로 넘어가는 버튼
         btnMaxCalorie.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                /*sqlDB = dataBaseHelper.getWritableDatabase();
-                sqlDB.execSQL("INSERT INTO maxCalorie VALUES(" + maxCalorie + ");");
-                sqlDB.close();*/ //db로 넘겨주기
-
                 Intent mintent = new Intent(getApplicationContext(),MainActivity.class);
                 mintent.putExtra("MaxCalorie",maxCalorie);
                 Toast.makeText(getApplicationContext(),"max값을 정하였습니다.",Toast.LENGTH_SHORT).show();
@@ -108,6 +80,8 @@ public class MaxCalorie extends AppCompatActivity {
             }
         });
     }
+
+    //Max 칼로리 값을 한 번 저장하는 메소드
     @Override
     protected void onPause() { // 하나만 저장할 수 있는 저장소가 있다.
         super.onPause();
@@ -117,6 +91,7 @@ public class MaxCalorie extends AppCompatActivity {
         editor.commit(); // commit() 메소드를 사용해야 실제로 저장이 된다.
     }
 
+    // 저장한 칼로리 값을 가져오는 메소드
     @Override
     protected void onResume() {
         super.onResume();

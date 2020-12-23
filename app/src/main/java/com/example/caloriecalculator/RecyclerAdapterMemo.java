@@ -66,7 +66,7 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
                     public void onClick(DialogInterface dialog, int which) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
-                        dataBaseHelper.updateDataMemo(String.valueOf(mPersons.get(position)._id),mPersons.get(position).dates,mPersons.get(position).memo);
+                        dataBaseHelper.updateDataMemo(mPersons.get(position)._ids,mPersons.get(position).dates,et.getText().toString());
                         dataBaseHelper.updateItemsMemo();
                         Fragment2.rAdaptermemo.notifyDataSetChanged();
                         showToast("메모가 변경 되었습니다.");
@@ -77,7 +77,7 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
                     public void onClick(DialogInterface dialog, int which) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
-                        dataBaseHelper.deleteDateMemo(String.valueOf(mPersons.get(position)._id));
+                        dataBaseHelper.deleteDateMemo(mPersons.get(position)._ids);
                         dataBaseHelper.updateItemsMemo();
                         Fragment2.rAdaptermemo.notifyDataSetChanged();
                         showToast("메모가 삭제 되었습니다.");

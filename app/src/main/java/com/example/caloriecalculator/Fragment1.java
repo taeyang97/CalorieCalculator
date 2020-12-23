@@ -30,10 +30,6 @@ public class Fragment1 extends Fragment {
     RecyclerView rView;
     public static RecyclerAdapter rAdapter;
 
-    public Fragment1() {
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,7 +47,6 @@ public class Fragment1 extends Fragment {
         rView.setLayoutManager(layoutManager);
 
         rAdapter = new RecyclerAdapter(context,items);
-
         rView.setAdapter(rAdapter);
         return fragView;
     }

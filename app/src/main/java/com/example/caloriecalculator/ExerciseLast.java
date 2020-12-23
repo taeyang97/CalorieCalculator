@@ -3,16 +3,20 @@ package com.example.caloriecalculator;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,15 +25,16 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 
-public class ExerciseLast extends AppCompatActivity {
-    Button btnExerciseSel;
+public class ExerciseLast extends StatusActivity {
+    Button btnExerciseSel, btnExerciseClear;
+    EditText etExerciseClear;
     TextView tvExerciseCal, tvCalorieMin;
     WebView webView;
     int maxCalorie, todayCalorie;
     String[] exercise = {"걷기","계단","등산","수영","요가","복싱","줄넘기","자전거","달리기","스쿼트","사이클","스쿼시",
                     "훌라후프","런닝머신","에어로빅","윗몸일으키기"};
     String date,today,max;
-    int _id,cYear, cMonth, cDay;
+    int cYear, cMonth, cDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,8 @@ public class ExerciseLast extends AppCompatActivity {
         ActionBar ac = getSupportActionBar();
         ac.hide();
         btnExerciseSel = (Button)findViewById(R.id.btnExercisesSel);
+        btnExerciseClear = (Button)findViewById(R.id.btnExerciseClear);
+        etExerciseClear = (EditText)findViewById(R.id.etExerciseClear);
         tvExerciseCal = (TextView)findViewById(R.id.tvExerciseCal);
         tvCalorieMin = (TextView)findViewById(R.id.tvCalorieMin);
         Spinner spinLast = (Spinner)findViewById(R.id.spinLast);
@@ -80,10 +87,28 @@ public class ExerciseLast extends AppCompatActivity {
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
                 boolean isInserted = dataBaseHelper.insertData(date,today,max);
                 if(isInserted == true){
-                    Toast.makeText(getApplicationContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
+                    showToast("저장되었습니다.");
                     finish();
                 } else {
-                    Toast.makeText(getApplicationContext(),"다시 저장해주세요",Toast.LENGTH_SHORT).show();
+                    showToast("다시 저장해주세요.");
+                }
+            }
+        });
+        // 운동 완료 후 칼로리 소모량 빼기 메소드
+        btnExerciseClear.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                try {
+                    todayCalorie = todayCalorie - Integer.parseInt(etExerciseClear.getText().toString());
+                    tvExerciseCal.setText(todayCalorie + "kal : " + maxCalorie + "kal");
+                    if (maxCalorie - todayCalorie >= 0) {
+                        tvCalorieMin.setText("+" + (maxCalorie - todayCalorie) + "kal");
+                    } else {
+                        tvCalorieMin.setText((maxCalorie - todayCalorie) + "kal");
+                    }
+                    etExerciseClear.setText("");
+                } catch (NumberFormatException e){
+                    showToast("숫자를 입력해주세요");
                 }
 
             }
@@ -100,7 +125,12 @@ public class ExerciseLast extends AppCompatActivity {
         maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
         todayCalorie = gIntent.getIntExtra("TodayCalorie",0);
         tvExerciseCal.setText(todayCalorie + "kal : " + maxCalorie + "kal");
-        tvCalorieMin.setText("+" + (maxCalorie-todayCalorie) + "kal");
+        if(maxCalorie-todayCalorie>=0){
+            tvCalorieMin.setText("+" + (maxCalorie-todayCalorie) + "kal");
+        } else {
+            tvCalorieMin.setText((maxCalorie-todayCalorie) + "kal");
+        }
+
     }
     // 웹사이트 호출해주는 메소드
     public void webview(){
@@ -110,7 +140,10 @@ public class ExerciseLast extends AppCompatActivity {
         webSettings.setBuiltInZoomControls(true);
         webView.getSettings().setJavaScriptEnabled(true);
     }
-
+    //토스트 메소드
+    void showToast(String msg){
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+    }
     class MyWebViewClient extends WebViewClient { // 내부클래스 생성
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) { // String에게 전달받아 Webview에 전달한다.

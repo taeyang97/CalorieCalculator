@@ -57,6 +57,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS memo;");
         db.execSQL("CREATE TABLE memo (_ids INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "dates TEXT, memo TEXT);");
+        db.execSQL("DROP TABLE IF EXISTS todayCalorie;");
+        db.execSQL("CREATE TABLE todayCalorie (date TEXT, today TEXT);");
     }
 
     @Override
@@ -71,6 +73,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // 테이블 삭제하고 onCreate() 다시 로드시킨다.
         Log.d(TAG,"onUpgrade() : DB Schema Modified and Excuting onCreate()");
         db.execSQL("DROP TABLE IF EXISTS loadCalorie;");
+        db.execSQL("DROP TABLE IF EXISTS memo;");
         onCreate(db);
     }
 
@@ -190,7 +193,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("_ids", _ids);
         values.put("dates", dates);
         values.put("memo", memo);
-        db.update("memo", values, "_ids = ?", new String[] { _ids });
+        db.update("memo", values, "_ids = ?", new String[] {_ids});
         return true;
     }
 
@@ -230,5 +233,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         dbHelper.close();
+    }
+
+    public void insertDataTodayCalorie(String date, String today){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("date", date);
+        values.put("today", today);
+        sqlDB.insert("todayCalorie", null, values);
+    }
+
+    public void deleteDateTodayCalorie(){
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+//        sqlDB.delete("todayCalorie", "*",null);
+        sqlDB.execSQL("DELETE FROM todayCalorie");
     }
 }
