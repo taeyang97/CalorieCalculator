@@ -331,6 +331,14 @@ public class MainActivity extends StatusActivity {
 
         return divide;
     }
+
+    // 운동 후 칼로리 소모 하고 다시 메인 화면으로 왔을 때 갱신 하기 위해 쓰는 메소드
+    @Override
+    protected void onResume() {
+        super.onResume();
+        todayCalorieBar();
+    }
+
     protected void clearState(){ // 초기화 할 수 있는 메소드를 새로 만들어 주었다.
         // 전에 저장되었던 데이터를 초기화 할 때 사용한다.
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -338,4 +346,5 @@ public class MainActivity extends StatusActivity {
         editor.clear();
         editor.commit();
     }
+
 }

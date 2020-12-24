@@ -22,6 +22,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.lang.reflect.Field;
 import java.util.Calendar;
 
@@ -35,6 +38,7 @@ public class ExerciseLast extends StatusActivity {
                     "훌라후프","런닝머신","에어로빅","윗몸일으키기"};
     String date,today,max;
     int cYear, cMonth, cDay;
+    DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,10 @@ public class ExerciseLast extends StatusActivity {
         tvExerciseCal = (TextView)findViewById(R.id.tvExerciseCal);
         tvCalorieMin = (TextView)findViewById(R.id.tvCalorieMin);
         Spinner spinLast = (Spinner)findViewById(R.id.spinLast);
+        dataBaseHelper = new DataBaseHelper(this);
         webview();
         maxCaloriebar();
+        setDate();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item,exercise);
         spinLast.setPrompt("어떤 운동을 하시나요?");
@@ -75,12 +81,6 @@ public class ExerciseLast extends StatusActivity {
             @Override
             public void onSingleClick(View v) {
 
-                Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
-                cYear = cal.get(Calendar.YEAR);
-                cMonth = cal.get(Calendar.MONTH);
-                cDay = cal.get(Calendar.DAY_OF_MONTH); // 그 달의 일수
-
-                date = cYear + "-" + (cMonth + 1) + "-" + cDay;
                 today = String.valueOf(todayCalorie);
                 max = String.valueOf(maxCalorie);
 
@@ -101,12 +101,15 @@ public class ExerciseLast extends StatusActivity {
                 try {
                     todayCalorie = todayCalorie - Integer.parseInt(etExerciseClear.getText().toString());
                     tvExerciseCal.setText(todayCalorie + "kal : " + maxCalorie + "kal");
+                    dataBaseHelper.deleteDateTodayCalorie();
+                    dataBaseHelper.insertDataTodayCalorie(date,String.valueOf(todayCalorie));
                     if (maxCalorie - todayCalorie >= 0) {
                         tvCalorieMin.setText("+" + (maxCalorie - todayCalorie) + "kal");
                     } else {
                         tvCalorieMin.setText((maxCalorie - todayCalorie) + "kal");
                     }
                     etExerciseClear.setText("");
+                    Snackbar.make(v,"칼로리가 소모되었습니다.", BaseTransientBottomBar.LENGTH_LONG).show();
                 } catch (NumberFormatException e){
                     showToast("숫자를 입력해주세요");
                 }
@@ -139,6 +142,14 @@ public class ExerciseLast extends StatusActivity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setBuiltInZoomControls(true);
         webView.getSettings().setJavaScriptEnabled(true);
+    }
+    void setDate(){
+        Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
+        cYear = cal.get(Calendar.YEAR);
+        cMonth = cal.get(Calendar.MONTH);
+        cDay = cal.get(Calendar.DAY_OF_MONTH); // 그 달의 일수
+
+        date = cYear + "-" + (cMonth + 1) + "-" + cDay;
     }
     //토스트 메소드
     void showToast(String msg){
