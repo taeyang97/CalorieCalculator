@@ -52,8 +52,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         final EditText et = new EditText(mContext);
         holder._id.setText(mPersons.get(position)._id);
         holder.date.setText(mPersons.get(position).date);
-        holder.today.setText(mPersons.get(position).today + "kal");
-        holder.max.setText(mPersons.get(position).max + "kal");
         holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
         holder.pbLoadBar.setMax(Integer.parseInt(mPersons.get(position).max));
         holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
@@ -128,7 +126,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
-        TextView _id, date, today, max, tvLoadTodayMaxCal;
+        TextView _id, date, tvLoadTodayMaxCal;
         ImageButton ibClear,ibCreate;
         ProgressBar pbLoadBar;
 
@@ -136,8 +134,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             super(itemView);
             _id = itemView.findViewById(R.id.tv_id);
             date = itemView.findViewById(R.id.tvDate);
-            today = itemView.findViewById(R.id.tvToday);
-            max = itemView.findViewById(R.id.tvMax);
             tvLoadTodayMaxCal = itemView.findViewById(R.id.tvLoadTodayMaxCal);
             ibClear = itemView.findViewById(R.id.ibClear);
             ibCreate = itemView.findViewById(R.id.ibCreate);

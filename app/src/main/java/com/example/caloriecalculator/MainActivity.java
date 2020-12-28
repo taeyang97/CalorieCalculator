@@ -134,20 +134,23 @@ public class MainActivity extends StatusActivity {
                 try{
                     autoText1 = tvMainAtuoText1.getText().toString();
                     getVal2();
+
                     autoText2 = Double.parseDouble(etMainText.getText().toString()) * calorie;
                     car += Double.parseDouble(etMainText.getText().toString()) * carbohydrate;
                     pro += Double.parseDouble(etMainText.getText().toString()) * protein;
                     fa += Double.parseDouble(etMainText.getText().toString()) * fat;
-                    div(car);
-                    div(pro);
-                    div(fa);
+
+                    car = (int)(car*10)/10;
+                    pro = (int)(pro*10)/10;
+                    fa = (int)(fa*10)/10;
+
                     tvMainText1.setText(autoText1 + etMainText.getText().toString() + "인분");
                     tvMainText2.setText((int)autoText2 + " kcal");
-                    tvMainText3.setText("\n탄수화물 : " + car +
-                            "\n단백질 : " + pro + "\n지방 : " + fa);
+                    tvMainText3.setText("\n탄수화물 : " + (int)car +
+                            "\n단백질 : " + (int)pro + "\n지방 : " + (int)fa);
                     progress += (int)autoText2;
                     pbMainBar.setProgress(progress);
-                    tvMainCalorieBar1.setText(String.valueOf(progress));
+                    tvMainCalorieBar1.setText(progress + "kcal");
 
                     /*sqlDB = dataBaseHelper.getWritableDatabase();
                     sqlDB.execSQL("INSERT INTO todayCalorie VALUES(" + autoText2 + ");");
@@ -219,10 +222,11 @@ public class MainActivity extends StatusActivity {
                                     + "','" + etFoodPro.getText().toString()
                                     + "','" + etFoodFat.getText().toString() + "');");
                             sqlDB.close();
-                            getVal();
                             adapter.clear();
+                            getVal();
                             adapter.addAll(nameData);
                             adapter.notifyDataSetChanged();
+                            showToast("음식이 저장되었습니다.");
                         }
                     }
                 });
@@ -230,8 +234,6 @@ public class MainActivity extends StatusActivity {
                 builder.setCancelable(false);
                 AlertDialog dialog = builder.create();
                 dialog.show();
-                getVal();
-                getVal2();
             }
         });
         // reset 버튼 (누적 값 초기화)
@@ -240,7 +242,7 @@ public class MainActivity extends StatusActivity {
             public void onSingleClick(View v) {
                 progress=0;
                 pbMainBar.setProgress(progress);
-                tvMainCalorieBar1.setText(String.valueOf(progress));
+                tvMainCalorieBar1.setText(progress + "kcal");
                 car=0;
                 pro=0;
                 fa=0;
@@ -260,7 +262,7 @@ public class MainActivity extends StatusActivity {
         pbMainBar.setMax(maxCalorie);*/
         Intent gIntent = getIntent();
         maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
-        tvMainCalorieBar2.setText(String.valueOf(maxCalorie));
+        tvMainCalorieBar2.setText(maxCalorie + "kcal");
         pbMainBar.setMax(maxCalorie);
     }
 
@@ -286,7 +288,7 @@ public class MainActivity extends StatusActivity {
         if(!TextUtils.isEmpty(date)){
             if(date.equals(dates)){
                 progress = Integer.parseInt(today);
-                tvMainCalorieBar1.setText(today);
+                tvMainCalorieBar1.setText(today + "kcal");
                 pbMainBar.setProgress(progress);
                 btnMainReset.setVisibility(View.VISIBLE);
             }
@@ -324,12 +326,6 @@ public class MainActivity extends StatusActivity {
     //토스트 메소드
     void showToast(String msg){
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
-    }
-    // 소수점 첫째자리까지 구하는 메소드
-    double div(double divide){
-        divide = Double.parseDouble(String.format("%.1f",divide));
-
-        return divide;
     }
 
     // 운동 후 칼로리 소모 하고 다시 메인 화면으로 왔을 때 갱신 하기 위해 쓰는 메소드

@@ -52,8 +52,4 @@ public class Fragment2 extends Fragment {
         rAdaptermemo = new RecyclerAdapterMemo(context,items);
         rViewmemo.setAdapter(rAdaptermemo);
     }
-    public void refresh(){
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(this).attach(this).commit();
-    }
 }

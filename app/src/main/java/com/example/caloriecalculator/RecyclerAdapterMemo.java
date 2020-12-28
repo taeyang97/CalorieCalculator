@@ -83,7 +83,6 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
                         showToast("메모가 삭제 되었습니다.");
                     }
                 });
-                builder.setCancelable(false);
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }

@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="표준체중 = (나의 키 -100) * 0.9\n\n
-    표준체중 * 활동지수=MAX칼로리\n
+    표준체중 * 활동지수=MAX칼로리\n\n
     활동 지수\n\n
 
     25\n

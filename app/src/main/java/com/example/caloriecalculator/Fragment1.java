@@ -45,13 +45,12 @@ public class Fragment1 extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL,false);
         rView.setLayoutManager(layoutManager);
-
         rAdapter = new RecyclerAdapter(context,items);
         rView.setAdapter(rAdapter);
         return fragView;
     }
-
-    void showToast(String msg){
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+    public void refresh(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
     }
 }

@@ -37,13 +37,14 @@
                 android:layout_marginHorizontal="30dp" />
             <AutoCompleteTextView
                 android:id="@+id/tvMainAutoText1"
-                android:layout_width="wrap_content"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:hint="입력하세요"
                 android:gravity="center"
-                android:maxLines="1"
                 android:completionThreshold="1"
-                android:layout_marginHorizontal="30dp"/>
+                android:maxLines="2"
+                android:layout_marginHorizontal="30dp"
+                android:dropDownWidth="150dp"/>
             <ImageButton
                 android:id="@+id/ibMainFoodName"
                 android:layout_width="wrap_content"
