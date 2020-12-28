@@ -79,8 +79,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         DataBaseHelper dataBaseHelper = new DataBaseHelper(mContext);
                         boolean isInserted = dataBaseHelper.insertDataMemo(dates,memo);
                         if(isInserted == true){
-                            showToast("저장되었습니다.");
+                            dataBaseHelper.updateItemsMemo();
                             Fragment2.rAdaptermemo.notifyDataSetChanged();
+                            showToast("저장되었습니다.");
                         } else {
                             showToast("다시 저장해주세요.");
                         }
