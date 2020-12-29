@@ -12,6 +12,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -41,21 +44,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends StatusActivity {
-    ImageButton ibMainCalorieReset, ibMainFoodName;
+    ImageButton ibMainCalorieReset, ibMainFoodName, ibMainExercise, ibload;
     AutoCompleteTextView tvMainAtuoText1;
-    Button btnMainConfirm, btnMainReset, btnMainExercise, btnload;
+    Button btnMainConfirm, btnMainReset;
     TextView tvMainText1, tvMainText2, tvMainText3, tvMainCalorieBar1, tvMainCalorieBar2;
     EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat;
     ProgressBar pbMainBar;
     String autoText1,date,today, dates;
     double autoText2, calorie, carbohydrate, protein, fat, car, pro, fa;
-    int position, maxCalorie, progress=0, cYear, cMonth, cDay;
+    int position, maxCalorie, progress=0, cnt=0, cYear, cMonth, cDay;
     ArrayList<String> nameData;
     ArrayAdapter<String> adapter;
     String num[] = {"0.2", "0.4", "0.6", "0.8", "1", "1.5", "2", "2.5", "3"};
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqlDB;
     View foodView;
+    Handler handler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +74,8 @@ public class MainActivity extends StatusActivity {
         tvMainAtuoText1 = (AutoCompleteTextView)findViewById(R.id.tvMainAutoText1);
         btnMainConfirm = (Button)findViewById(R.id.btnMainConfirm);
         btnMainReset = (Button)findViewById(R.id.btnMainReset);
-        btnMainExercise = (Button)findViewById(R.id.btnMainExercise);
-        btnload = (Button)findViewById(R.id.btnload);
+        ibMainExercise = (ImageButton) findViewById(R.id.ibMainExercise);
+        ibload = (ImageButton)findViewById(R.id.ibload);
         etMainText = (EditText) findViewById(R.id.etMainText);
         pbMainBar = (ProgressBar)findViewById(R.id.pbMainbar);
         tvMainText1 = (TextView)findViewById(R.id.tvMainText1);
@@ -94,7 +99,7 @@ public class MainActivity extends StatusActivity {
             }
         });
         // 칼로리 저장 목록 버튼
-        btnload.setOnClickListener(new OnSingleClickListener() {
+        ibload.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),LoadCalorie.class);
@@ -124,6 +129,7 @@ public class MainActivity extends StatusActivity {
                 dialog.show();
             }
         });
+
         // 음식 확인 버튼
         btnMainConfirm.setOnClickListener(new OnSingleClickListener() {
             @Override
@@ -149,7 +155,23 @@ public class MainActivity extends StatusActivity {
                     tvMainText3.setText("\n탄수화물 : " + (int)car +
                             "\n단백질 : " + (int)pro + "\n지방 : " + (int)fa);
                     progress += (int)autoText2;
-                    pbMainBar.setProgress(progress);
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            for(int i=1; i<=(int)autoText2; i++){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pbMainBar.incrementProgressBy(1);
+                                    }
+                                });
+                                SystemClock.sleep(5);
+                            }
+                        }
+                    }.start();
+
+                    // setProgess는 view를 다시만들어야 하지만 이건 아니다. 결론 : 더 빠르다.
                     tvMainCalorieBar1.setText(progress + "kcal");
 
                     /*sqlDB = dataBaseHelper.getWritableDatabase();
@@ -167,7 +189,7 @@ public class MainActivity extends StatusActivity {
             }
         });
         // 운동을 보여주는 버튼
-        btnMainExercise.setOnClickListener(new OnSingleClickListener() {
+        ibMainExercise.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 if(progress != 0){

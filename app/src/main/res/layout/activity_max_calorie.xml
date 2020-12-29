@@ -36,8 +36,8 @@
     규칙적인 생활로 활동량이 보통이라고 생각하는 경우\n\n
 
     40\n
-    육체노동으로 활동량이 많은 경우\n\n
-    "/>
+    육체노동으로 활동량이 많은 경우\n\n"
+            android:textColor="#000000"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
