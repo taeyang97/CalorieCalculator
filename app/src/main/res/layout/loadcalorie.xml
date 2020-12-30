@@ -21,6 +21,12 @@
             android:orientation="horizontal"
             android:gravity="right">
             <ImageButton
+                android:id="@+id/ibGridView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gridimage"
+                android:backgroundTint="#EAEAEA"/>
+            <ImageButton
                 android:id="@+id/ibSearchOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,16 +1,17 @@
 package com.example.caloriecalculator;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.os.Bundle;
-import android.text.Editable;
+
 import android.text.TextUtils;
-import android.text.TextWatcher;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,11 +20,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import static com.example.caloriecalculator.DataBaseHelper.DB_PATH;
 
 public class MaxCalorie extends StatusActivity {
     double average;
@@ -105,5 +101,12 @@ public class MaxCalorie extends StatusActivity {
                 startActivity(mintent);
             }
         }
+    }
+
+    //뒤로가기 누를 시 전의 액티비티로 가지 않고 종료
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCompat.finishAffinity(this);
     }
 }

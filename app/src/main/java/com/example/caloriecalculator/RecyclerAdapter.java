@@ -1,23 +1,22 @@
 package com.example.caloriecalculator;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context mContext;
     String dates,memo;
     int cYear, cMonth, cDay;
-
+    Dialog memoDialog, removeDialog;
     public RecyclerAdapter(Context context, ArrayList<ItemData> persons) {
         this.mContext = context;
         this.mInflate = LayoutInflater.from(context);
@@ -49,7 +48,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final EditText et = new EditText(mContext);
         holder._id.setText(mPersons.get(position)._id);
         holder.date.setText(mPersons.get(position).date);
         holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
@@ -58,24 +56,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.ibCreate.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("메모를 작성하세요");
-                if (et.getParent() != null){
-                    ((ViewGroup) et.getParent()).removeView(et); // view에는 하나의 setView만 할 수 있기 때문
-                }
-                builder.setView(et);
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
+                memoDialog = new Dialog(mContext);
+                memoDialog.setContentView(R.layout.memodialog);
+
+                EditText etMemo = (EditText)memoDialog.findViewById(R.id.etMemo);
+                Button btnExit = (Button)memoDialog.findViewById(R.id.btnExit);
+                Button btnLoad = (Button)memoDialog.findViewById(R.id.btnLoad);
+
+                memoDialog.show();
+                memoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                btnLoad.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
                         Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
                         cYear = cal.get(Calendar.YEAR);
                         cMonth = cal.get(Calendar.MONTH);
                         cDay = cal.get(Calendar.DAY_OF_MONTH); // 그 달의 일수
 
                         dates = cYear + "-" + (cMonth + 1) + "-" + cDay;
-                        memo = et.getText().toString();
-                        et.setText("");
+                        memo = etMemo.getText().toString();
+                        etMemo.setText("");
                         DataBaseHelper dataBaseHelper = new DataBaseHelper(mContext);
                         boolean isInserted = dataBaseHelper.insertDataMemo(dates,memo);
                         if(isInserted == true){
@@ -87,33 +89,45 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                     }
                 });
-                builder.setNegativeButton("취소",null);
-                builder.setCancelable(false);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                btnExit.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        memoDialog.dismiss();
+                    }
+                });
             }
         });
         holder.ibClear.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("기록을 제거하시겠습니까?");
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+
+                removeDialog = new Dialog(mContext);
+                removeDialog.setContentView(R.layout.removedialog);
+
+                Button btnCancel = (Button)removeDialog.findViewById(R.id.btnCancel);
+                Button btnRemove = (Button)removeDialog.findViewById(R.id.btnRemove);
+
+                removeDialog.show();
+                removeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                btnRemove.setOnClickListener(new OnSingleClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onSingleClick(View v) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
                         dataBaseHelper.deleteDate(mPersons.get(position)._id);
                         dataBaseHelper.updateItems();
                         Fragment1.rAdapter.notifyDataSetChanged();
                         showToast("제거되었습니다.");
+                        removeDialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("취소",null);
-                builder.setCancelable(false);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                btnCancel.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        removeDialog.dismiss();
+                    }
+                });
             }
         });
     }

@@ -1,22 +1,24 @@
 package com.example.caloriecalculator;
 
-import android.Manifest;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,43 +26,38 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
+
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends StatusActivity {
     ImageButton ibMainCalorieReset, ibMainFoodName, ibMainExercise, ibload;
     AutoCompleteTextView tvMainAtuoText1;
-    Button btnMainConfirm, btnMainReset;
+    Button btnMainConfirm, btnMainReset, btnNo, btnYes, btnCancel, btnChoose, btnFoodNum, btnFoodPassive;
     TextView tvMainText1, tvMainText2, tvMainText3, tvMainCalorieBar1, tvMainCalorieBar2;
-    EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat;
+    EditText etMainText, etFoodName, etFoodCal, etFoodCar, etFoodPro, etFoodFat, etFoodNum;
+    RadioButton[] rbBtnNum = new RadioButton[8];
+    Integer rbBtnNumID[] = {R.id.rbBtnNum1, R.id.rbBtnNum2, R.id.rbBtnNum3, R.id.rbBtnNum4,
+            R.id.rbBtnNum5, R.id.rbBtnNum6, R.id.rbBtnNum7, R.id.rbBtnNum8};
     ProgressBar pbMainBar;
-    String autoText1,date,today, dates;
+    String autoText1,date,today, dates, position;
     double autoText2, calorie, carbohydrate, protein, fat, car, pro, fa;
-    int position, maxCalorie, progress=0, cnt=0, cYear, cMonth, cDay;
+    int maxCalorie, progress=0, cYear, cMonth, cDay;
     ArrayList<String> nameData;
     ArrayAdapter<String> adapter;
-    String num[] = {"0.2", "0.4", "0.6", "0.8", "1", "1.5", "2", "2.5", "3"};
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqlDB;
-    View foodView;
-    Handler handler;
-
+    Dialog resetdialog, fooddialog, foodNumDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +87,18 @@ public class MainActivity extends StatusActivity {
         todayCalorieBar();
         getVal();
         getVal2();
+
+        if(progress>maxCalorie/3){
+            pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar2));
+        }
+        if(progress>maxCalorie/2){
+            pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar3));
+        }
+        if(progress>maxCalorie/1.2){
+            pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar4));
+        }
+
+        // 자동완성 텍스트
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,nameData);
         tvMainAtuoText1.setAdapter(adapter);
         tvMainAtuoText1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,6 +107,7 @@ public class MainActivity extends StatusActivity {
                 getVal2();
             }
         });
+
         // 칼로리 저장 목록 버튼
         ibload.setOnClickListener(new OnSingleClickListener() {
             @Override
@@ -106,27 +116,54 @@ public class MainActivity extends StatusActivity {
                 startActivity(intent);
             }
         });
+
         //음식 섭취량 대화상자 호출
         etMainText.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("음식 섭취량")
-                        .setSingleChoiceItems(num, -1, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                position = which;
-                            }
-                        })
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                etMainText.setText(num[position]);
-                            }
-                        });
-                builder.setCancelable(false);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+
+                foodNumDialog = new Dialog(MainActivity.this);
+                foodNumDialog.setContentView(R.layout.foodnumdialog);
+
+                etFoodNum = (EditText)foodNumDialog.findViewById(R.id.etFoodNum);
+                btnFoodPassive = (Button)foodNumDialog.findViewById(R.id.btnFoodPassive);
+                btnFoodNum = (Button)foodNumDialog.findViewById(R.id.btnFoodNum);
+                for(int i=0; i<rbBtnNumID.length; i++){
+                    rbBtnNum[i] = (RadioButton)foodNumDialog.findViewById(rbBtnNumID[i]);
+                }
+
+                foodNumDialog.show();
+                foodNumDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                for(int i=0; i<rbBtnNumID.length; i++){
+                    final int index;
+                    index = i;
+                    rbBtnNum[index].setOnClickListener(new OnSingleClickListener() {
+                        @Override
+                        public void onSingleClick(View v) {
+                            position = rbBtnNum[index].getText().toString();
+                        }
+                    });
+                }
+
+                btnFoodPassive.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        try{
+                            etMainText.setText(etFoodNum.getText().toString());
+                            foodNumDialog.dismiss();
+                        } catch (NumberFormatException e){
+                            showToast("숫자를 입력해주세요.");
+                        }
+                    }
+                });
+                btnFoodNum.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        etMainText.setText(position);
+                        foodNumDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -152,10 +189,19 @@ public class MainActivity extends StatusActivity {
 
                     tvMainText1.setText(autoText1 + etMainText.getText().toString() + "인분");
                     tvMainText2.setText((int)autoText2 + " kcal");
-                    tvMainText3.setText("\n탄수화물 : " + (int)car +
-                            "\n단백질 : " + (int)pro + "\n지방 : " + (int)fa);
+                    tvMainText3.setText("\n탄수화물 : " + (int)car + " + " + carbohydrate +
+                            "\n단백질 : " + (int)pro + " + " + protein + "\n지방 : " + (int)fa + " + " + fat);
                     progress += (int)autoText2;
 
+                    if(progress>maxCalorie/3){
+                        pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar2));
+                    }
+                    if(progress>maxCalorie/2){
+                        pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar3));
+                    }
+                    if(progress>maxCalorie/1.2){
+                        pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar4));
+                    }
                     new Thread(){
                         @Override
                         public void run() {
@@ -188,6 +234,7 @@ public class MainActivity extends StatusActivity {
                 }
             }
         });
+
         // 운동을 보여주는 버튼
         ibMainExercise.setOnClickListener(new OnSingleClickListener() {
             @Override
@@ -202,37 +249,62 @@ public class MainActivity extends StatusActivity {
                 }
             }
         });
+
         // 칼로리 리셋 버튼
         ibMainCalorieReset.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                clearState();
-                if(progress!=0){
-                    dataBaseHelper.deleteDateTodayCalorie();
-                }
-                /*SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-                dataBaseHelper.onUpgrade(db,1,2);
-                db.close();*/
-                Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
-                startActivity(intent);
+                resetdialog = new Dialog(MainActivity.this);
+                resetdialog.setContentView(R.layout.resetdialog);
+
+                btnNo = (Button)resetdialog.findViewById(R.id.btnNo);
+                btnYes = (Button)resetdialog.findViewById(R.id.btnYes);
+
+                resetdialog.show();
+                resetdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                btnYes.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        clearState();
+                        if(progress!=0){
+                            dataBaseHelper.deleteDateTodayCalorie();
+                        }
+                        Intent intent = new Intent(getApplicationContext(),MaxCalorie.class);
+                        startActivity(intent);
+                        showToast("Max값을 다시 정해주세요.");
+                    }
+                });
+                btnNo.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        resetdialog.dismiss();
+                    }
+                });
             }
         });
+
         // db에 음식 추가 버튼
         ibMainFoodName.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                foodView = (View)View.inflate(MainActivity.this,R.layout.foodname,null);
-                etFoodName = (EditText)foodView.findViewById(R.id.etFoodName);
-                etFoodCal = (EditText)foodView.findViewById(R.id.etFoodCal);
-                etFoodCar = (EditText)foodView.findViewById(R.id.etFoodCar);
-                etFoodPro = (EditText)foodView.findViewById(R.id.etFoodPro);
-                etFoodFat = (EditText)foodView.findViewById(R.id.etFoodFat);
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("추가할 음식");
-                builder.setView(foodView);
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                fooddialog = new Dialog(MainActivity.this);
+                fooddialog.setContentView(R.layout.foodname);
+
+                etFoodName = (EditText)fooddialog.findViewById(R.id.etFoodName);
+                etFoodCal = (EditText)fooddialog.findViewById(R.id.etFoodCal);
+                etFoodCar = (EditText)fooddialog.findViewById(R.id.etFoodCar);
+                etFoodPro = (EditText)fooddialog.findViewById(R.id.etFoodPro);
+                etFoodFat = (EditText)fooddialog.findViewById(R.id.etFoodFat);
+                btnCancel = (Button)fooddialog.findViewById(R.id.btnCancel);
+                btnChoose = (Button)fooddialog.findViewById(R.id.btnChoose);
+
+                fooddialog.show();
+                fooddialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                btnChoose.setOnClickListener(new OnSingleClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onSingleClick(View v) {
                         if(TextUtils.isEmpty(etFoodName.getText().toString())){
                             showToast("이름을 정확히 입력 해주세요.");
                         }
@@ -252,18 +324,22 @@ public class MainActivity extends StatusActivity {
                         }
                     }
                 });
-                builder.setNegativeButton("취소",null);
-                builder.setCancelable(false);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                btnCancel.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        fooddialog.dismiss();
+                    }
+                });
             }
         });
+
         // reset 버튼 (누적 값 초기화)
         btnMainReset.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 progress=0;
                 pbMainBar.setProgress(progress);
+                pbMainBar.setProgressDrawable(getDrawable(R.drawable.progressbar));
                 tvMainCalorieBar1.setText(progress + "kcal");
                 car=0;
                 pro=0;
@@ -277,6 +353,7 @@ public class MainActivity extends StatusActivity {
             }
         });
     }
+
     // maxCalorie값 호출해 오는 메소드
     public void maxCalorieBar(){
         /*maxCalorie = DataBaseHelper.getmaxCalorie(this,maxCalorie);
@@ -357,7 +434,8 @@ public class MainActivity extends StatusActivity {
         todayCalorieBar();
     }
 
-    protected void clearState(){ // 초기화 할 수 있는 메소드를 새로 만들어 주었다.
+    // 초기화 할 수 있는 메소드
+    protected void clearState(){
         // 전에 저장되었던 데이터를 초기화 할 때 사용한다.
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -365,4 +443,10 @@ public class MainActivity extends StatusActivity {
         editor.commit();
     }
 
+    //뒤로가기 누를 시 전의 액티비티로 가지 않고 종료
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCompat.finishAffinity(this);
+    }
 }

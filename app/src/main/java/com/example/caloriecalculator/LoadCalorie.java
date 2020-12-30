@@ -1,22 +1,19 @@
 package com.example.caloriecalculator;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -28,7 +25,7 @@ public class LoadCalorie extends StatusActivity {
     TabLayout tabs;
     ViewPager vPage1;
     MyPagerAdapter adapter;
-    ImageButton ibSearchOff, ibSearchOn;
+    ImageButton ibGridView, ibSearchOff, ibSearchOn;
     View searchView;
     int cYear, cMonth, cDay;
     String _id,date,today,max;
@@ -42,6 +39,7 @@ public class LoadCalorie extends StatusActivity {
         ac.hide();
         tabs=(TabLayout)findViewById(R.id.tabs);
         vPage1=(ViewPager)findViewById(R.id.vPage1);
+        ibGridView = (ImageButton)findViewById(R.id.ibGridView);
         ibSearchOff = (ImageButton)findViewById(R.id.ibSearchOff);
         ibSearchOn = (ImageButton)findViewById(R.id.ibSearchOn);
 
@@ -52,6 +50,26 @@ public class LoadCalorie extends StatusActivity {
         //어댑터 설정
         adapter=new MyPagerAdapter(getSupportFragmentManager(),2);
         vPage1.setAdapter(adapter);
+
+        //리스트뷰와 그리드뷰 실시간 변경
+        ibGridView.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                if(Fragment1.value==true){
+                    Fragment1.value = false;
+                    Fragment2.value = false;
+                    Fragment1.layoutmanger();
+                    Fragment2.layoutmanger();
+                    ibGridView.setImageResource(R.drawable.listimage);
+                } else {
+                    Fragment1.value = true;
+                    Fragment2.value = true;
+                    Fragment1.layoutmanger();
+                    Fragment2.layoutmanger();
+                    ibGridView.setImageResource(R.drawable.gridimage);
+                }
+            }
+        });
 
         //저장목록 전체보기
         ibSearchOff.setOnClickListener(new OnSingleClickListener() {

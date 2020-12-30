@@ -1,18 +1,17 @@
 package com.example.caloriecalculator;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +24,7 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
     private ArrayList<ItemData> mPersons;
     private LayoutInflater mInflate;
     private Context mContext;
-    String _ids, dates, memo;
+    Dialog memoInfoDialog;
 
     public RecyclerAdapterMemo(Context context, ArrayList<ItemData> persons) {
         this.mContext = context;
@@ -45,46 +44,57 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final EditText et = new EditText(mContext);
-
         holder.dates.setText(mPersons.get(position).dates);
         holder.memo.setText(mPersons.get(position).memo);
         holder.ibUpdate.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("메모를 확인하세요");
-                if (et.getParent() != null){
-                    ((ViewGroup) et.getParent()).removeView(et); // view에는 하나의 setView만 할 수 있기 때문
-                }
-                et.setText(mPersons.get(position).memo);
-                builder.setMessage(mPersons.get(position).dates);
-                builder.setView(et);
-                builder.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                memoInfoDialog = new Dialog(mContext);
+                memoInfoDialog.setContentView(R.layout.memoinfodialog);
+
+                ImageButton ibBack = (ImageButton)memoInfoDialog.findViewById(R.id.ibBack);
+                TextView tvDate = (TextView)memoInfoDialog.findViewById(R.id.tvDate);
+                EditText etMemoInfo = (EditText)memoInfoDialog.findViewById(R.id.etMemoInfo);
+                Button btnRemove = (Button)memoInfoDialog.findViewById(R.id.btnRemove);
+                Button btnUpdate = (Button)memoInfoDialog.findViewById(R.id.btnUpdate);
+
+                memoInfoDialog.show();
+                memoInfoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                memoInfoDialog.setCancelable(false);
+                etMemoInfo.setText(mPersons.get(position).memo);
+                tvDate.setText(mPersons.get(position).dates);
+                ibBack.setOnClickListener(new OnSingleClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onSingleClick(View v) {
+                        memoInfoDialog.dismiss();
+                    }
+                });
+                btnUpdate.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
-                        dataBaseHelper.updateDataMemo(mPersons.get(position)._ids,mPersons.get(position).dates,et.getText().toString());
+                        dataBaseHelper.updateDataMemo(mPersons.get(position)._ids,mPersons.get(position).dates,etMemoInfo.getText().toString());
                         dataBaseHelper.updateItemsMemo();
                         Fragment2.rAdaptermemo.notifyDataSetChanged();
                         showToast("메모가 변경 되었습니다.");
+                        memoInfoDialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("삭제", new DialogInterface.OnClickListener() {
+                btnRemove.setOnClickListener(new OnSingleClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onSingleClick(View v) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
                         dataBaseHelper.deleteDateMemo(mPersons.get(position)._ids);
                         dataBaseHelper.updateItemsMemo();
                         Fragment2.rAdaptermemo.notifyDataSetChanged();
                         showToast("메모가 삭제 되었습니다.");
+                        memoInfoDialog.dismiss();
                     }
                 });
-                AlertDialog dialog = builder.create();
-                dialog.show();
             }
         });
     }
