@@ -450,3 +450,5 @@ public class MainActivity extends StatusActivity {
         ActivityCompat.finishAffinity(this);
     }
 }
+/// 잘되나?? 브랜치 LSG로 저장해봄
+///마스터 브랜치 저장
