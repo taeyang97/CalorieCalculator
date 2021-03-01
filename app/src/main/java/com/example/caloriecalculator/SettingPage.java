@@ -21,41 +21,47 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MaxCalorie extends StatusActivity {
+import com.example.caloriecalculator.option.OnSingleClickListener;
+import com.example.caloriecalculator.option.StatusActivity;
+
+public class SettingPage extends StatusActivity {
     double average;
     int maxCalorie;
     EditText etMaxCalorie;
     TextView tvMaxCalorie;
     Button btnMaxCalorie;
     String[] select = {"", String.valueOf(25), String.valueOf(30), String.valueOf(35), String.valueOf(40)};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_max_calorie);
+        setContentView(R.layout.settingpage);
         ActionBar ac = getSupportActionBar();
         ac.hide();
 
-        etMaxCalorie = (EditText)findViewById(R.id.etMaxCalorie);
+        etMaxCalorie = (EditText) findViewById(R.id.etMaxCalorie);
         Spinner spinMaxCalorie = (Spinner) findViewById(R.id.spinMaxCalorie);
-        btnMaxCalorie = (Button)findViewById(R.id.btnMaxCalorie);
-        tvMaxCalorie = (TextView)findViewById(R.id.tvMaxCalorie);
+        btnMaxCalorie = (Button) findViewById(R.id.btnMaxCalorie);
+        tvMaxCalorie = (TextView) findViewById(R.id.tvMaxCalorie);
 
+        // 스피너의 어댑터 장착
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,select);
+                android.R.layout.simple_spinner_item, select);
         spinMaxCalorie.setAdapter(adapter);
 
+        // 스피너 클릭
         spinMaxCalorie.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     if (!TextUtils.isEmpty(etMaxCalorie.getText().toString())) {
                         average = (Double.parseDouble(etMaxCalorie.getText().toString()) - 100) * 0.9;
-                        maxCalorie = (int)(average * Integer.parseInt(select[position]));
+                        maxCalorie = (int) (average * Integer.parseInt(select[position]));
                         tvMaxCalorie.setText("나의 Max 칼로리 값   " + maxCalorie);
                         btnMaxCalorie.setEnabled(true);
                     }
-                } catch (NumberFormatException e){
-                    Toast.makeText(getApplicationContext(),"값을 올바르게 입력해 주세요",Toast.LENGTH_SHORT).show();
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "값을 올바르게 입력해 주세요", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -69,9 +75,9 @@ public class MaxCalorie extends StatusActivity {
         btnMaxCalorie.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                Intent mintent = new Intent(getApplicationContext(),MainActivity.class);
-                mintent.putExtra("MaxCalorie",maxCalorie);
-                Toast.makeText(getApplicationContext(),"max값을 정하였습니다.",Toast.LENGTH_SHORT).show();
+                Intent mintent = new Intent(getApplicationContext(), MainPage.class);
+                mintent.putExtra("MaxCalorie", maxCalorie);
+                Toast.makeText(getApplicationContext(), "max값을 정하였습니다.", Toast.LENGTH_SHORT).show();
                 startActivity(mintent);
             }
         });
@@ -92,11 +98,11 @@ public class MaxCalorie extends StatusActivity {
     protected void onResume() {
         super.onResume();
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE); // 저장소의 있는 값을 받아온다.
-        if((preferences != null) && (preferences.contains("vkey"))) { // 아무 값이 없지 않거나, 값이 존재할 경우 실행
-            tvMaxCalorie.setText("나의 Max 칼로리 값   " + Integer.parseInt(preferences.getString("vkey","")));
-            maxCalorie = Integer.parseInt(preferences.getString("vkey",""));
-            if(maxCalorie!=0) {
-                Intent mintent = new Intent(getApplicationContext(), MainActivity.class);
+        if ((preferences != null) && (preferences.contains("vkey"))) { // 아무 값이 없지 않거나, 값이 존재할 경우 실행
+            tvMaxCalorie.setText("나의 Max 칼로리 값   " + Integer.parseInt(preferences.getString("vkey", "")));
+            maxCalorie = Integer.parseInt(preferences.getString("vkey", ""));
+            if (maxCalorie != 0) {
+                Intent mintent = new Intent(getApplicationContext(), MainPage.class);
                 mintent.putExtra("MaxCalorie", maxCalorie);
                 startActivity(mintent);
             }

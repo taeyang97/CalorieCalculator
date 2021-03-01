@@ -1,4 +1,4 @@
-package com.example.caloriecalculator;
+package com.example.caloriecalculator.loadpage;
 
 import android.content.Context;
 
@@ -13,14 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.caloriecalculator.DataBaseHelper;
+import com.example.caloriecalculator.R;
+
 import java.util.ArrayList;
 
 public class Fragment2 extends Fragment {
-    public static ArrayList<ItemData> items = new ArrayList<>();
+    public static ArrayList<LoadData> items = new ArrayList<>();
     public static RecyclerView rViewmemo;
     public static RecyclerAdapterMemo rAdaptermemo;
     public static Context context;
-    static boolean value=true;
+    static boolean value = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,21 +34,20 @@ public class Fragment2 extends Fragment {
         dataBaseHelper.updateItemsMemo();
 
         context = fragView.getContext();
-        rViewmemo = (RecyclerView)fragView.findViewById(R.id.rview2);
+        rViewmemo = (RecyclerView) fragView.findViewById(R.id.rview2);
         rViewmemo.setHasFixedSize(true); //  리사이클러뷰 안 아이템들의 크기를 가변적으로 바꿀지 아니면 일정한 크기를 사용할지를 지정
 
         layoutmanger();
 
-        showItemList();
+        rAdaptermemo = new RecyclerAdapterMemo(context, items);
+        rViewmemo.setAdapter(rAdaptermemo);
         return fragView;
     }
-    public void showItemList(){
-        rAdaptermemo = new RecyclerAdapterMemo(context,items);
-        rViewmemo.setAdapter(rAdaptermemo);
-    }
-    public static void layoutmanger(){
 
-        if(value==true) {
+    // 레이아웃 변경을 동적으로 하기 위해 만든 메소드
+    public static void layoutmanger() {
+
+        if (value == true) {
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                     LinearLayoutManager.VERTICAL, false);
@@ -58,6 +60,5 @@ public class Fragment2 extends Fragment {
             rViewmemo.setLayoutManager(layoutManager);
 
         }
-
     }
 }

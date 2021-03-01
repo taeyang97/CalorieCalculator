@@ -1,9 +1,7 @@
-package com.example.caloriecalculator;
+package com.example.caloriecalculator.loadpage;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -19,17 +17,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.caloriecalculator.DataBaseHelper;
+import com.example.caloriecalculator.option.OnSingleClickListener;
+import com.example.caloriecalculator.R;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
-    private ArrayList<ItemData> mPersons;
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+    private ArrayList<LoadData> mPersons;
     private LayoutInflater mInflate;
     private Context mContext;
-    String dates,memo;
+    String dates, memo;
     int cYear, cMonth, cDay;
     Dialog memoDialog, removeDialog;
-    public RecyclerAdapter(Context context, ArrayList<ItemData> persons) {
+
+    public RecyclerAdapter(Context context, ArrayList<LoadData> persons) {
         this.mContext = context;
         this.mInflate = LayoutInflater.from(context);
         this.mPersons = persons;
@@ -39,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View itemView = mInflate.inflate(R.layout.listviewcalorie,parent,false);
+        View itemView = mInflate.inflate(R.layout.loadpagelistviewcalorie, parent, false);
         ViewHolder viewHolder = new ViewHolder(itemView);
         return viewHolder;
 
@@ -53,16 +56,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.tvLoadTodayMaxCal.setText(mPersons.get(position).today + "kal / " + mPersons.get(position).max + "kal");
         holder.pbLoadBar.setMax(Integer.parseInt(mPersons.get(position).max));
         holder.pbLoadBar.setProgress(Integer.parseInt(mPersons.get(position).today));
+
+        // 메모를 생성 시켜주는 버튼
         holder.ibCreate.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
 
                 memoDialog = new Dialog(mContext);
-                memoDialog.setContentView(R.layout.memodialog);
+                memoDialog.setContentView(R.layout.loadpagememodialog);
 
-                EditText etMemo = (EditText)memoDialog.findViewById(R.id.etMemo);
-                Button btnExit = (Button)memoDialog.findViewById(R.id.btnExit);
-                Button btnLoad = (Button)memoDialog.findViewById(R.id.btnLoad);
+                EditText etMemo = (EditText) memoDialog.findViewById(R.id.etMemo);
+                Button btnExit = (Button) memoDialog.findViewById(R.id.btnExit);
+                Button btnLoad = (Button) memoDialog.findViewById(R.id.btnLoad);
 
                 memoDialog.show();
                 memoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -79,8 +84,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         memo = etMemo.getText().toString();
                         etMemo.setText("");
                         DataBaseHelper dataBaseHelper = new DataBaseHelper(mContext);
-                        boolean isInserted = dataBaseHelper.insertDataMemo(dates,memo);
-                        if(isInserted == true){
+                        boolean isInserted = dataBaseHelper.insertDataMemo(dates, memo);
+                        if (isInserted == true) {
                             dataBaseHelper.updateItemsMemo();
                             Fragment2.rAdaptermemo.notifyDataSetChanged();
                             showToast("저장되었습니다.");
@@ -97,15 +102,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 });
             }
         });
+
+        // 누적된 칼로리를 지우는 버튼
         holder.ibClear.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
 
                 removeDialog = new Dialog(mContext);
-                removeDialog.setContentView(R.layout.removedialog);
+                removeDialog.setContentView(R.layout.loadpageremovedialog);
 
-                Button btnCancel = (Button)removeDialog.findViewById(R.id.btnCancel);
-                Button btnRemove = (Button)removeDialog.findViewById(R.id.btnRemove);
+                Button btnCancel = (Button) removeDialog.findViewById(R.id.btnCancel);
+                Button btnRemove = (Button) removeDialog.findViewById(R.id.btnRemove);
 
                 removeDialog.show();
                 removeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -131,8 +138,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             }
         });
     }
-    void showToast(String msg){
-        Toast.makeText(mContext,msg,Toast.LENGTH_SHORT).show();
+
+    void showToast(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -142,7 +150,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
         TextView _id, date, tvLoadTodayMaxCal;
-        ImageButton ibClear,ibCreate;
+        ImageButton ibClear, ibCreate;
         ProgressBar pbLoadBar;
 
         public ViewHolder(@NonNull View itemView) {

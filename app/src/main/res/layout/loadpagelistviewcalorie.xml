@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_weight="1"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"/>
                 <ImageButton
                     android:id="@+id/ibClear"

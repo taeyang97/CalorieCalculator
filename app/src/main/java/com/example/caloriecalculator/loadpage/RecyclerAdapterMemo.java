@@ -1,9 +1,7 @@
-package com.example.caloriecalculator;
+package com.example.caloriecalculator.loadpage;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -18,15 +16,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.caloriecalculator.DataBaseHelper;
+import com.example.caloriecalculator.option.OnSingleClickListener;
+import com.example.caloriecalculator.R;
+
 import java.util.ArrayList;
 
-public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMemo.ViewHolder>{
-    private ArrayList<ItemData> mPersons;
+public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMemo.ViewHolder> {
+    private ArrayList<LoadData> mPersons;
     private LayoutInflater mInflate;
     private Context mContext;
     Dialog memoInfoDialog;
 
-    public RecyclerAdapterMemo(Context context, ArrayList<ItemData> persons) {
+    public RecyclerAdapterMemo(Context context, ArrayList<LoadData> persons) {
         this.mContext = context;
         this.mInflate = LayoutInflater.from(context);
         this.mPersons = persons;
@@ -36,7 +38,7 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View itemView = mInflate.inflate(R.layout.listviewmemo,parent,false);
+        View itemView = mInflate.inflate(R.layout.loadpagelistviewmemo, parent, false);
         ViewHolder viewHolder = new ViewHolder(itemView);
         return viewHolder;
     }
@@ -46,18 +48,20 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
 
         holder.dates.setText(mPersons.get(position).dates);
         holder.memo.setText(mPersons.get(position).memo);
+
+        // 메모를 수정, 삭제해주는 버튼
         holder.ibUpdate.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
 
                 memoInfoDialog = new Dialog(mContext);
-                memoInfoDialog.setContentView(R.layout.memoinfodialog);
+                memoInfoDialog.setContentView(R.layout.loadpagememoinfodialog);
 
-                ImageButton ibBack = (ImageButton)memoInfoDialog.findViewById(R.id.ibBack);
-                TextView tvDate = (TextView)memoInfoDialog.findViewById(R.id.tvDate);
-                EditText etMemoInfo = (EditText)memoInfoDialog.findViewById(R.id.etMemoInfo);
-                Button btnRemove = (Button)memoInfoDialog.findViewById(R.id.btnRemove);
-                Button btnUpdate = (Button)memoInfoDialog.findViewById(R.id.btnUpdate);
+                ImageButton ibBack = (ImageButton) memoInfoDialog.findViewById(R.id.ibBack);
+                TextView tvDate = (TextView) memoInfoDialog.findViewById(R.id.tvDate);
+                EditText etMemoInfo = (EditText) memoInfoDialog.findViewById(R.id.etMemoInfo);
+                Button btnRemove = (Button) memoInfoDialog.findViewById(R.id.btnRemove);
+                Button btnUpdate = (Button) memoInfoDialog.findViewById(R.id.btnUpdate);
 
                 memoInfoDialog.show();
                 memoInfoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -76,7 +80,7 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
                     public void onSingleClick(View v) {
                         DataBaseHelper dataBaseHelper;
                         dataBaseHelper = new DataBaseHelper(mContext);
-                        dataBaseHelper.updateDataMemo(mPersons.get(position)._ids,mPersons.get(position).dates,etMemoInfo.getText().toString());
+                        dataBaseHelper.updateDataMemo(mPersons.get(position)._ids, mPersons.get(position).dates, etMemoInfo.getText().toString());
                         dataBaseHelper.updateItemsMemo();
                         Fragment2.rAdaptermemo.notifyDataSetChanged();
                         showToast("메모가 변경 되었습니다.");
@@ -98,9 +102,11 @@ public class RecyclerAdapterMemo extends RecyclerView.Adapter<RecyclerAdapterMem
             }
         });
     }
-    void showToast(String msg){
-        Toast.makeText(mContext,msg,Toast.LENGTH_SHORT).show();
+
+    void showToast(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public int getItemCount() {
         return mPersons.size();

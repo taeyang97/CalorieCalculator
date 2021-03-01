@@ -1,4 +1,4 @@
-package com.example.caloriecalculator;
+package com.example.caloriecalculator.option;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+// status바의 색상을 변경해주는 클래스
 public class StatusActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -19,7 +20,7 @@ public class StatusActivity extends AppCompatActivity {
                 view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 getWindow().setStatusBarColor(Color.parseColor("#FFEAEAEA"));
             }
-        }else if (Build.VERSION.SDK_INT >= 21) {
+        } else if (Build.VERSION.SDK_INT >= 21) {
             // 21 버전 이상일 때
             getWindow().setStatusBarColor(Color.BLACK);
         }

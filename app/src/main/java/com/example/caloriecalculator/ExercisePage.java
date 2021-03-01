@@ -16,41 +16,44 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.caloriecalculator.option.OnSingleClickListener;
+import com.example.caloriecalculator.option.StatusActivity;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
-public class ExerciseLast extends StatusActivity {
+public class ExercisePage extends StatusActivity {
     Button btnExerciseSel, btnExerciseClear;
     EditText etExerciseClear;
     TextView tvExerciseCal, tvCalorieMin;
     WebView webView;
     int maxCalorie, todayCalorie;
-    String[] exercise = {"걷기","계단","등산","수영","요가","복싱","줄넘기","자전거","달리기","스쿼트","사이클","스쿼시",
-                    "훌라후프","런닝머신","에어로빅","윗몸일으키기"};
-    String date,today,max;
-    int cYear, cMonth, cDay;
+    String[] exercise = {"걷기", "계단", "등산", "수영", "요가", "복싱", "줄넘기", "자전거", "달리기", "스쿼트", "사이클", "스쿼시",
+            "훌라후프", "런닝머신", "에어로빅", "윗몸일으키기"};
+    String date, today, max;
     DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercise_last);
+        setContentView(R.layout.exercisepage);
         ActionBar ac = getSupportActionBar();
         ac.hide();
-        btnExerciseSel = (Button)findViewById(R.id.btnExercisesSel);
-        btnExerciseClear = (Button)findViewById(R.id.btnExerciseClear);
-        etExerciseClear = (EditText)findViewById(R.id.etExerciseClear);
-        tvExerciseCal = (TextView)findViewById(R.id.tvExerciseCal);
-        tvCalorieMin = (TextView)findViewById(R.id.tvCalorieMin);
-        Spinner spinLast = (Spinner)findViewById(R.id.spinLast);
+        btnExerciseSel = (Button) findViewById(R.id.btnExercisesSel);
+        btnExerciseClear = (Button) findViewById(R.id.btnExerciseClear);
+        etExerciseClear = (EditText) findViewById(R.id.etExerciseClear);
+        tvExerciseCal = (TextView) findViewById(R.id.tvExerciseCal);
+        tvCalorieMin = (TextView) findViewById(R.id.tvCalorieMin);
+        Spinner spinLast = (Spinner) findViewById(R.id.spinLast);
         dataBaseHelper = new DataBaseHelper(this);
         webview();
         maxCaloriebar();
         setDate();
+
+        // 스피너에 어댑터 장착
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item,exercise);
+                android.R.layout.simple_spinner_dropdown_item, exercise);
         spinLast.setPrompt("어떤 운동을 하시나요?");
         spinLast.setAdapter(adapter);
 
@@ -78,8 +81,8 @@ public class ExerciseLast extends StatusActivity {
                 max = String.valueOf(maxCalorie);
 
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-                boolean isInserted = dataBaseHelper.insertData(date,today,max);
-                if(isInserted == true){
+                boolean isInserted = dataBaseHelper.insertData(date, today, max);
+                if (isInserted == true) {
                     showToast("저장되었습니다.");
                     finish();
                 } else {
@@ -87,6 +90,7 @@ public class ExerciseLast extends StatusActivity {
                 }
             }
         });
+
         // 운동 완료 후 칼로리 소모량 빼기 메소드
         btnExerciseClear.setOnClickListener(new OnSingleClickListener() {
             @Override
@@ -95,15 +99,15 @@ public class ExerciseLast extends StatusActivity {
                     todayCalorie = todayCalorie - Integer.parseInt(etExerciseClear.getText().toString());
                     tvExerciseCal.setText(todayCalorie + "kal : " + maxCalorie + "kal");
                     dataBaseHelper.deleteDateTodayCalorie();
-                    dataBaseHelper.insertDataTodayCalorie(date,String.valueOf(todayCalorie));
+                    dataBaseHelper.insertDataTodayCalorie(date, String.valueOf(todayCalorie));
                     if (maxCalorie - todayCalorie >= 0) {
                         tvCalorieMin.setText("+" + (maxCalorie - todayCalorie) + "kal");
                     } else {
                         tvCalorieMin.setText((maxCalorie - todayCalorie) + "kal");
                     }
                     etExerciseClear.setText("");
-                    Snackbar.make(v,"칼로리가 소모되었습니다.", BaseTransientBottomBar.LENGTH_LONG).show();
-                } catch (NumberFormatException e){
+                    Snackbar.make(v, "칼로리가 소모되었습니다.", BaseTransientBottomBar.LENGTH_LONG).show();
+                } catch (NumberFormatException e) {
                     showToast("숫자를 입력해주세요");
                 }
 
@@ -112,31 +116,36 @@ public class ExerciseLast extends StatusActivity {
     }
 
     // 칼로리량을 받아온 메소드
-    public void maxCaloriebar(){
+    public void maxCaloriebar() {
         /*maxCalorie = DataBaseHelper.getmaxCalorie(this,maxCalorie);
         todayCalorie = DataBaseHelper.gettodayCalorie(this,todayCalorie);
         tvExerciseCal.setText(todayCalorie + "kal : " + String.valueOf(maxCalorie) + "kal");*/
 
         Intent gIntent = getIntent();
-        maxCalorie = gIntent.getIntExtra("MaxCalorie",0);
-        todayCalorie = gIntent.getIntExtra("TodayCalorie",0);
+        maxCalorie = gIntent.getIntExtra("MaxCalorie", 0);
+        todayCalorie = gIntent.getIntExtra("TodayCalorie", 0);
         tvExerciseCal.setText(todayCalorie + "kal : " + maxCalorie + "kal");
-        if(maxCalorie-todayCalorie>=0){
-            tvCalorieMin.setText("+" + (maxCalorie-todayCalorie) + "kal");
+        if (maxCalorie - todayCalorie >= 0) {
+            tvCalorieMin.setText("+" + (maxCalorie - todayCalorie) + "kal");
         } else {
-            tvCalorieMin.setText((maxCalorie-todayCalorie) + "kal");
+            tvCalorieMin.setText((maxCalorie - todayCalorie) + "kal");
         }
 
     }
+
     // 웹사이트 호출해주는 메소드
-    public void webview(){
-        webView = (WebView)findViewById(R.id.webView);
+    public void webview() {
+        webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new MyWebViewClient());
         WebSettings webSettings = webView.getSettings();
         webSettings.setBuiltInZoomControls(true);
         webView.getSettings().setJavaScriptEnabled(true);
     }
-    void setDate(){
+
+    // 날짜 계산 메소드
+    void setDate() {
+        int cYear, cMonth, cDay;
+
         Calendar cal = Calendar.getInstance(); // 핸드폰의 날짜와 시간을 가져와 시간을 넣어준다.
         cYear = cal.get(Calendar.YEAR);
         cMonth = cal.get(Calendar.MONTH);
@@ -144,10 +153,13 @@ public class ExerciseLast extends StatusActivity {
 
         date = cYear + "-" + (cMonth + 1) + "-" + cDay;
     }
+
     //토스트 메소드
-    void showToast(String msg){
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+    void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
+
+    // 웹뷰 생성 클래스
     class MyWebViewClient extends WebViewClient { // 내부클래스 생성
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) { // String에게 전달받아 Webview에 전달한다.

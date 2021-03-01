@@ -12,8 +12,8 @@
         android:roundIcon="@mipmap/ic_caloriecarculator"
         android:supportsRtl="true"
         android:theme="@style/Theme.CalorieCalculator">
-        <activity android:name=".ExerciseLast"></activity>
-        <activity android:name=".MaxCalorie" />
+        <activity android:name=".ExercisePage"></activity>
+        <activity android:name=".SettingPage" />
         <activity
             android:name=".LogoPage"
             android:theme="@style/SplashTheme">
@@ -23,8 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoadCalorie" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".loadpage.LoadPage" />
+        <activity android:name=".MainPage"
+            android:windowSoftInputMode="adjustResize|adjustPan"/>
     </application>
 
 </manifest>
