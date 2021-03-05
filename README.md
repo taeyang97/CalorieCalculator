@@ -3,7 +3,7 @@
 **프로젝트 ppt입니다.**
 ***
 [프로젝트 시연 동영상](https://youtu.be/VfZKLMslZmk)
-**1.5배로 진행해주세요.**
+**1.5 ~ 2배로 진행해주세요.**
 ***
 ![1.](https://user-images.githubusercontent.com/62505841/109804266-67cd9700-7c65-11eb-8b14-d88feba8d14a.jpeg)
 ![2.](https://user-images.githubusercontent.com/62505841/109804348-7ddb5780-7c65-11eb-894f-1e3f46682317.jpeg)
